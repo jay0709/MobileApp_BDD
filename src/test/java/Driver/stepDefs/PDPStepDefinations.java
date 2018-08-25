@@ -1,0 +1,721 @@
+/**
+ * @author Syed Zubair Mehdi
+
+ *
+ */
+package Driver.stepDefs;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
+import Driver.PropertyData;
+import Driver.desiredCapabilities;
+import ObjectRepository.CommonFunctions_OR;
+import ObjectRepository.FavouriteProperty_OR;
+import ObjectRepository.MeTab_OR;
+import ObjectRepository.OpenHouse_OR;
+import ObjectRepository.PropertDetailsPage_OR;
+import ObjectRepository.Registration_OR;
+import PageObjects.EditDeleteAssest_PO;
+import PageObjects.FavTabRequestTour_PO;
+import PageObjects.FavouriteProperty_PO;
+import PageObjects.PropertDetailsPage_PO;
+import PageObjects.PropertyDetailsPage2_PO;
+import PageObjects.commonFunctions;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
+
+public class PDPStepDefinations extends desiredCapabilities implements PropertDetailsPage_OR ,CommonFunctions_OR,FavouriteProperty_OR ,Registration_OR,OpenHouse_OR,MeTab_OR{
+	
+	PropertyDetailsPage2_PO pd = new PropertyDetailsPage2_PO();
+	PropertyData prop = new PropertyData();
+	EditDeleteAssest_PO ed = new EditDeleteAssest_PO();
+	commonFunctions cf = new commonFunctions();
+	FavouriteProperty_PO ft = new FavouriteProperty_PO();
+	OpenHouseStepDefinations osd = new OpenHouseStepDefinations();
+	FavTabRequestTour_PO ftr = new FavTabRequestTour_PO();
+	PropertDetailsPage_PO pdp = new PropertDetailsPage_PO();
+	PropertyData pr = new PropertyData();
+   String ExpectedEmp;
+   String PropertyPrice;
+   String ExpectedPropertyPrice;
+
+	
+	@Given("^verify tool tip details$")
+	public void verify_tool_tip_details() throws Throwable
+	{
+		pd.toolTipDetailsInfo(driver);
+	}
+	
+	@And("^View number of schools and verify First school details$")
+	public void Verify_first_displayed_school_details() throws Throwable
+	{
+	   	pd.topAssignedSchool(driver);
+	}
+	@And("^Validate if all schools details are displayed$")
+	public void Validate_if_all_schools_details_are_displayed() throws Throwable
+	{
+		pd.viewAllSchools(driver);
+	}
+	
+	@And("^Verify school data source location$")
+	public void Verify_school_data_source_location() throws Throwable
+	{
+		pd.viewSchoolSourceNavigatation(driver);
+	}
+	@Given("^Verify EMP \"([^\"]*)\"$")
+	public void verify_EMP(String empSection) throws Throwable {
+		
+		if(empSection.equals("estimated value"))
+		{
+			pd.checkEMPvalue(driver);
+		}
+		else if(empSection.equals("estimated info"))
+		{
+			pd.checkEstimatedInfo(driver);
+		}
+		else
+		{
+			System.out.println("No section available in emp");
+		}
+
+	}
+	@And("^Verify EMP components like principal and interest property taxes and HOA dues$")
+	public void Verify_EMP_components_like_principal_and_interest_property_taxes_and_HOA_dues() throws Throwable
+	{
+		pd.checkEMPBreakUp(driver);
+	}
+	
+	@Given("^validate presence of \"([^\"]*)\" section$")
+	public void validate_presence_of_section(String sectionPresence) throws Throwable {
+		
+		if(sectionPresence.equals("Make an offer"))
+		{
+			pd.MakeAnOfferFormValidation(driver);
+
+			
+        }
+		else if(sectionPresence.equals("Ask a question"))
+		{
+			pd.AskAQuestionForm(driver);		
+
+		}
+		else
+		{
+			System.out.println("No section presence to be checked");
+		}
+
+	}
+	
+	@And("^User Scroll upwards$")
+	public void Scroll_upwards() throws Throwable
+	{
+		cf.verticalScrollUpwards(driver);
+
+	}
+	
+	@And("^User adds a comment and verifies if the comment is displayed in pdp page$")
+	public void User_adds_a_comment_and_verifies_if_the_comment_is_displayed_in_pdp_page() throws Throwable
+	{
+		pd.CommentVerificationinPDP(driver, prop.newAsset);
+
+	}
+	
+	
+	@And("^User edits the latest comment added in pdp page$")
+	public void User_edits_the_latest_comment_added_in_pdp_page() throws Throwable
+	{
+
+		ed.editCommentFromFavTab(driver, "NEW text 123");
+	}
+	
+	@And("^User deletes the latest comment added in pdp page$")
+	public void User_deletes_the_latest_comment_added_in_pdp_page() throws Throwable
+	{
+		ed.deleteCommentsFromProperty(driver);
+	}
+	
+	@And("^User Adds image from Gallery and verifys in pdp page$")
+	public void User_Adds_image_from_Gallery_and_verifys_in_pdp_page() throws Throwable
+	{
+		ed.addImageFromGallery(driver);
+	}
+	
+	@And("^User Adds image from assest and verifys in pdp page$")
+	public void User_Adds_image_from_assest_and_verifys_in_pdp_page() throws Throwable
+	{
+		ed.addImageAssetFromCamera(driver);
+	}
+	
+	@And("^User swipes photos in PDP page and countes it$")
+	public void User_swipes_photos_in_PDP_page_and_countes_it() throws Throwable
+	{
+	   	ft.swipePhotosInFavourite(driver);
+	}
+	
+	@And("^add & delete multi line comments in pdp page and verify$")
+	public void add_and_delete_multi_line_comments_in_pdp_page_and_verify() throws Throwable
+	{
+		ft.addDeleteMultilineNotes(driver);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@And("^Enters any place like \"([^\"]*)\" in destination$")
+	public void enters_any_place_like_in_destination(String Destination) throws Throwable {
+		
+		driver.findElement(EstimateCommute).click();
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(EstimateCommuteSearchBar));
+		driver.findElement(EstimateCommuteSearchBar).click();
+		driver.findElement(EstimateCommuteSearchBar).sendKeys(Destination);
+		//wait.until(ExpectedConditions.textToBePresentInElement(searchResultStateName, Destination.split(",")[1]));
+		driver.findElement(searchResultStateName).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(AnalogClock));
+		
+          
+	}
+
+	@And("^Verify if \"([^\"]*)\" is displayed$")
+	public void verify_if_is_displayed(String object) throws Throwable {
+        
+		if(object.equals("Time"))
+		{		
+		wait.until(ExpectedConditions.visibilityOfElementLocated(CommuteDurationTime));
+		Assert.assertTrue(driver.findElement(CommuteDurationTime).isDisplayed(), "Estimation Duration time is not displayed");
+		}
+		else if(object.equals("Edit Profile Page"))
+		{
+			wait.until(ExpectedConditions.visibilityOfElementLocated(EditProfileFirstName));
+			Assert.assertTrue(driver.findElement(EditProfileFirstName).isDisplayed(), "Edit Profile Page is not displayed");
+        }
+		else if(object.equals("Feedback message"))
+		{
+			Assert.assertTrue(driver.findElement(EditProfileFirstName).isDisplayed(), "Edit Profile Page is not displayed");
+
+		}
+		else if(object.equals("LeaveBy/ArriveBy time"))
+		{
+			Assert.assertTrue(driver.findElement(ArriveAndLeaveTime).isDisplayed(), "Arrive By or Leave By time is not displayed");
+
+		}
+		else if(object.equals("Analog clock"))
+		{
+			Assert.assertTrue(driver.findElement(AnalogClock).isDisplayed(), "Analog clock is not displayed");
+
+		}
+		else if(object.equals("Commute Message"))
+		{
+			Assert.assertTrue(driver.findElement(CommuteMessage).isDisplayed(), "Commute Message is not displayed");
+
+		}
+		else if(object.equals("sqft tool tip icon"))
+		{
+			Assert.assertTrue(driver.findElement(SqftToolTipIcon).isDisplayed(), "Sqft tool tip icon is not displayed");
+
+		}
+		else if(object.equals("Date Column"))
+		{
+			Assert.assertTrue(driver.findElement(DateColumn).isDisplayed(), "Date Column is not displaed");
+		}
+		else if(object.equals("Event Column"))
+		{
+			Assert.assertTrue(driver.findElement(EventColumn).isDisplayed(), "Event Column is not displaed");
+
+		}
+		else if(object.equals("Price Column"))
+		{
+			Assert.assertTrue(driver.findElement(PriceColumn).isDisplayed(), "Price Column is not displaed");
+
+		}
+		else if(object.equals("Price Column"))
+		{
+			Assert.assertTrue(driver.findElement(PriceColumn).isDisplayed(), "Price Column is not displaed");
+
+		}
+		else if(object.equals("Source"))
+		{
+			Assert.assertTrue(driver.findElement(PriceSource).isDisplayed(), "Source is not displaed");
+        }
+		else if(object.equals("Contact Seller"))
+		{
+			Assert.assertTrue(driver.findElement(ContactSeller).isDisplayed(), "contact seller button is not displaed");
+
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@And("^User clicks on \"([^\"]*)\" button$")
+	public void user_clicks_on_button(String button) throws Throwable {
+		
+		if(button.equals("Get Directions"))
+		{
+			driver.findElement(GetDirectionsButton).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(GoogleMap));
+		}
+		else if(button.equals("mortagage calculator"))
+		{
+			driver.findElement(empCalculatorIconOnPdp).click();
+
+		}
+		else if(button.equals("x"))
+		{
+			driver.findElement(addedImageRemoveButton).click();
+		}
+		else if(button.equals("Show All"))
+		{
+		       driver.findElement(showAllText).click();
+		}
+		else if(button.equals("collapse Notes"))
+		{
+			driver.findElement(collapseAllButton).click();
+		}
+		else if(button.equals("share"))
+		{
+			driver.findElement(pdpPropertyShareIcon).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(ShareViaScreen));
+
+		}
+		else if(button.equals("Edit"))
+		{
+			wait.until(ExpectedConditions.textToBePresentInElement(EditProfile, "Edit Profile"));
+			driver.findElement(EditProfile).click();
+		}
+		else if(button.equals("Feedback"))
+		{
+            wait.until(ExpectedConditions.textToBePresentInElement(Feedback, "Feedback"));
+			driver.findElement(Feedback).click();
+		}
+		else if(button.equals("Notifications"))
+		{
+            wait.until(ExpectedConditions.textToBePresentInElement(Notifications, "Notifications"));
+            driver.findElement(Notifications).click();
+
+		}
+		else if(button.equals("Estimate My commute"))
+		{
+			driver.findElement(EstimateCommute).click();
+		}
+		else if(button.equals("Map CTA")) 
+		{
+		    driver.findElement(pdpMapIcon).click();	
+		}
+		else
+		{	
+			System.out.println("No button available to be clicked");
+		}
+
+	}
+
+	@And("^Verify if map is loaded$")
+	public void verify_if_map_is_loaded() throws Throwable {
+		
+		Assert.assertTrue(driver.findElement(GoogleMap).isDisplayed(), "Google Map is not displayed for Estimate Commute Section");
+
+	}
+	
+	@And("^compares property price is displayed same$")
+	public void compares_property_price_is_displayed_same() throws Throwable {
+		PropertyPrice = driver.findElement(priceInPDP).getText();
+		System.out.println("Actual property price"+ PropertyPrice);
+		wait.until(ExpectedConditions.elementToBeClickable(empCalculatorIconOnPdp));
+		try
+		{
+			cf.scrollToText("Principal and Interest", driver);
+		}
+		catch(NoSuchElementException e)
+		{
+			
+			System.out.println("its already at emp section");
+		}
+		String Actualemp = driver.findElement(ActualEMPprice).getText();
+		String FinalActualEmpPrice = Actualemp.substring(0, 4);
+		System.out.println("Actual EMP price is "+FinalActualEmpPrice);
+		driver.findElement(CustomizeCalculations).click();
+		 ExpectedEmp = driver.findElement(ExpectedEMPprice).getText();
+		String FinalExpectedEmpPrice = ExpectedEmp.substring(0, 4);
+		System.out.println("Final Expected EMP price is "+FinalExpectedEmpPrice);
+        Assert.assertEquals(FinalActualEmpPrice, FinalExpectedEmpPrice);
+
+	}
+
+	
+
+	@And("^increase or decrease \"([^\"]*)\" section$")
+	public void increase_or_decrease_section(String PropertyField) throws Throwable {
+		
+		if(PropertyField.equals("Down Payment"))
+		{
+			for(int i=0;i<2;i++)
+			{
+				driver.findElement(DownPaymentPlusButton).click();
+			}
+		}
+		else if(PropertyField.equals("interest rate"))
+		{
+			int i=0;
+			while(i<2)
+			{
+				driver.findElement(InterestDecreaseButton).click();
+				i++;
+			}
+		}
+		else
+		{
+			System.out.println("No Property Field present");
+		}
+
+	}
+
+	@And("^verify \"([^\"]*)\" changes$")
+	public void verify_changes(String section) throws Throwable {
+		
+		if(section.equals("Estimated montly payment"))
+		{
+			String PropertyPriceAfterModifcations = driver.findElement(ExpectedEMPprice).getText();
+			System.out.println("EMP Price after modifications"+PropertyPriceAfterModifcations);
+			Assert.assertNotSame( ExpectedEmp,PropertyPriceAfterModifcations,"EMP price as not changed after increasing or decreaseing interest and down payment");
+		}
+		else
+		{
+			System.out.println("No Section present for verification");
+		}
+
+	}
+	@And("^Verify \"([^\"]*)\" option presence and validate it$")
+	public void verify_option_presence_and_validate_it(String options) throws Throwable {
+		
+		if(options.equals("Share"))
+		{
+			Assert.assertTrue(driver.findElement(pdpPropertyShareIcon).isDisplayed(), "Share icon is displayed in pdp page and property can be shared");
+			driver.findElement(pdpPropertyShareIcon).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(ShareViaScreen));
+			Assert.assertTrue(driver.findElement(ShareViaScreen).isDisplayed(), "Share via screen is opened");
+			driver.navigate().back();
+			
+			//close it
+
+			
+		}
+		else if(options.equals("Map"))
+		{	
+			Assert.assertTrue(driver.findElement(pdpMapIcon).isDisplayed(), "Map icon is present in pdp page and can be clicked");
+			driver.findElement(pdpMapIcon).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(pdpMapLoaded));
+			Assert.assertTrue(driver.findElement(pdpMapLoaded).isDisplayed(), "Map is loaded after clicking on it");
+			driver.navigate().back();
+
+		}
+		else if(options.equals("Request Info"))
+		{
+			driver.navigate().back();
+			cf.verticalScrollUpwards(driver);
+			osd.Clicks_on_any_Property();
+			Assert.assertTrue(driver.findElement(RequestInfo).isDisplayed(),"Request Info button is not displayed");
+			
+
+	    }
+		else if(options.equals("Request a Tour"))
+		{
+			driver.navigate().back();
+			cf.verticalScrollUpwards(driver);
+			driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
+			osd.Clicks_on_any_Property();
+			driver.findElement(RequestTourTile).click();
+			try {
+				  WebElement element = driver.findElement(DayTile);
+				  String value= element.getAttribute("selected");
+				  System.out.println("selection value here is"+value);
+				  if(value.equals("true"))
+				  {
+					  System.out.println("Day tile is selected");
+				  }
+				  else
+				  {
+					  System.out.println("Day tile is selected");
+
+				  }
+                   String month = driver.findElement(requestTourMonth).getText();
+				   String date = driver.findElement(requestTourDayOfMonth).getText();
+				   String day = driver.findElement(requestTourDayOfWeek).getText();
+				   System.out.println("First tour date is: " + day + " " + date + " " + month);
+				   
+				   //Email Validation
+				   String email = driver.findElement(requestTourEmailUser).getText();
+					Assert.assertEquals(email.toLowerCase(), pr.email1.toLowerCase(),
+							"Email ID does not match with logged in user");
+					System.out.println("Email id verified as: " + email);
+					String comments = driver.findElement(requestTourComment).getText();
+					System.out.println("Pre-filled commment text: " + comments);	
+				} 
+			catch (Exception e)
+			{
+                e.printStackTrace();
+                System.out.println("No selected day tile present");
+			}
+			
+					
+		 }
+		else if(options.equals("school section collapse"))
+		{
+			driver.findElement(collapseButton).click();
+			try
+			{
+				Assert.assertTrue(!driver.findElement(viewAllSchools).isDisplayed(), "School section did not collapse after clicking on collapse button");
+            }
+			catch(NoSuchElementException element)
+			{
+				System.out.println("School section button as been collapsed");
+			}
+		}
+		else
+		{	
+			System.out.println("No option present to be validated ");
+		}
+		
+	}
+	
+	@And("^Validate \"([^\"]*)\" text presence in footer section$")
+	public void validate_the_link_by_clicking_on_it(String text) throws Throwable {
+        for(int i=0;i<=12;i++)
+        {
+        	 cf.verticalScrollUpwards(driver);
+        }
+		String FooterBodyText = driver.findElement(FooterText).getText();
+        Assert.assertTrue(FooterBodyText.contains(text), "text not found in FHEO footer!");
+
+    }
+	
+	@And("^User turn off the notification$")
+	public void User_turn_off_the_notification() throws Throwable {
+		pd.checkStateforSaveListingNotification(driver);
+	}
+	
+	@And("^Verify the state of the Save Listing notification$")
+	public void Verify_the_state_of_the_Save_Listing_notification() throws Throwable {
+		pd.checkStateforSaveListingNotification(driver);
+	}
+	
+	@And("^Validate Property auto-favorited$")
+	public void Validate_Property_auto_favorited() throws Throwable{
+		pd.checkPropertyIsFavorited(driver);
+		}
+	
+	@Given("^Verify \"([^\"]*)\" are displayed and validate it$")
+	public void verify_are_displayed_and_validate_it(String Items) throws Throwable {
+		
+		if(Items.equals("School Ratings"))
+		{
+			String text = driver.findElement(SchoolRating).getText();
+			int value = Integer.parseInt(text);	
+			Assert.assertTrue(driver.findElement(SchoolRating).isDisplayed(), "School Ratings are not present");
+
+			
+			if(value >= 1 && value < 4)
+			{
+			   System.out.println("Below Average Rating The color is Red");
+			}
+			else if(value>= 4 && value < 8)
+			{
+				System.out.println(" Average Rating The color is Yellow");
+			}
+			else if(value>= 8 && value < 11)
+			{
+				 System.out.println("Above Average Rating The color is Yellow");
+            }
+			else
+			{
+				System.out.println("No School ratings are present");
+			}
+			
+		}
+		else if(Items.equals("School Gradings"))
+		{
+			Assert.assertTrue(driver.findElement(SchoolGrading).isDisplayed(), "School Grading are not present");
+			driver.findElement(SchoolGrading).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(navigatingSearchTab));
+		    Assert.assertTrue(!driver.findElements(navigatingSearchTab).isEmpty(),"The search bar does not contain the name of the school selected");
+		}
+		else if(Items.equals("favourited property"))
+		{
+			
+		}
+		else
+		{
+			System.out.println("No school item present to be validated");
+		}
+		
+
+	}
+	
+	
+	@Given("^Verify  emp price on pdp is not impacted$")
+	public void Verify_emp_price_on_pdp_is_not_impacted() throws Throwable
+	{
+		driver.navigate().back();
+		Thread.sleep(3000);
+		cf.verticalScrollDownwrds(driver);
+		cf.verticalScrollDownwrds(driver);
+        ExpectedPropertyPrice = driver.findElement(priceInPDP).getText();
+		System.out.println("Expected property price"+ ExpectedPropertyPrice);
+		System.out.println("Actual property price is"+PropertyPrice);
+		Assert.assertEquals(ExpectedPropertyPrice, PropertyPrice);
+		
+	}
+	
+	@And("^Verifys property can be shared through Facebook,Whatsapp and twitter$")
+	public void Verifys_property_can_be_shared_through_Facebook_Whatsapp_and_twitter() throws Throwable
+	{
+		List<MobileElement> elements = driver.findElements(sharePanel);
+		System.out.println("The list size is"+elements.size());
+		for(WebElement ElementsName : elements) 
+		{
+			System.out.println("Elements Name are"+ElementsName);
+		}
+		
+		Assert.assertTrue(elements.contains("Facebook"), "property cannot be shared via Facebook");
+		Assert.assertTrue(elements.contains("Tweet"), "property cannot be shared via Tweet");
+		Assert.assertTrue(elements.contains("WhatsApp"), "property cannot be shared via Whatsapp");
+
+    }
+	
+	@And("^User Clicks on property from \"([^\"]*)\" view  to navigate to pdp page$")
+	public void User_Clicks_on_property_from_view_to_navigate_to_pdp_page(String views) throws Throwable
+	{
+		if (views.equals("Map"))
+		{
+			//wait.until(ExpectedConditions.visibilityOfElementLocated(clusterToPIN));
+			Thread.sleep(7000);
+			try
+               {
+				 driver.findElement(By.xpath("//*[@index='0']")).click();
+                 driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+			     driver.findElement(quickViewPrice).click();
+               	 wait.until(ExpectedConditions.presenceOfElementLocated(priceInPDP));
+                }
+                catch(NoSuchElementException e)
+                {
+                	  e.printStackTrace();
+                }
+		}
+		else if (views.equals("Swipe"))
+		{
+   	     wait.until(ExpectedConditions.presenceOfElementLocated(srpSwipeBtn));
+		 driver.findElement(srpSwipeBtn).click();
+		 wait.until(ExpectedConditions.visibilityOfElementLocated(SwipePrice));
+		 driver.findElement(SwipePrice).click();
+    	     wait.until(ExpectedConditions.presenceOfElementLocated(priceInPDP));
+
+		}
+		
+	}
+	
+	@And("^Verify date & time fields are scrollable$")
+	public void Verify_date_and_time_fields_are_scrollable() throws Throwable
+	{
+		try
+		{
+			String element = driver.findElement(dateField).getAttribute("scrollable");
+	        System.out.println(element);
+		}
+		catch(NoSuchElementException e)
+		{
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			driver.navigate().back();
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            cf.verticalScrollUpwards(driver);
+			wait.until(ExpectedConditions.elementToBeClickable(priceInList));
+			driver.findElement(priceInList).click();
+		    wait.until(ExpectedConditions.presenceOfElementLocated(priceInPDP));
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+		}
+        String element = driver.findElement(dateField).getAttribute("scrollable");
+
+		System.out.println("Date field  value"+element);
+		Assert.assertTrue(element.equalsIgnoreCase("true"), "Date field is not scrollable");
+		driver.findElement(DayTile).click();
+		Dimension size = driver.manage().window().getSize();
+		  System.out.println(size);
+		  
+		  //Find swipe x points from screen's with and height.
+		  //Find x1 point which is at right side of screen.
+		  int x1 = (int) (size.width * 0.20);
+		  //Find x2 point which is at left side of screen.
+		  int x2 = (int) (size.width * 0.80);
+		  
+		  WebElement ele1 =  (WebElement) driver.findElement(requestTourTime);  
+
+//		  TouchAction action = new TouchAction((PerformsTouchActions)driver);
+//		  action.longPress(PointOption.point(x1,540).waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+//moveTo(PointOption.point(x1,943).release().perform();
+		  
+		  (new TouchAction(driver))
+		    .press(PointOption.point(120, 540))
+		    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+		    .moveTo(PointOption.point(320, 640))
+		    .release()
+		    .perform();
+		  
+		  driver.findElement(requestTourTime).click();
+		  System.out.println("Time is scrollable");
+     }
+	
+	@And("^Date is single select and Time is multiple select$")
+	public void Date_is_single_select_and_Time_is_multiple_select() throws Throwable
+	{
+		
+	}
+	@And("^User clicks on \"([^\"]*)\" Tab$")
+	public void User_clicks_on_Tab(String Tab) throws Throwable
+	{
+		if (Tab.equals("List"))
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(srpListBtn));
+			driver.findElement(srpListBtn).click();
+			Thread.sleep(3000);
+
+		}
+		else if(Tab.equals("Map"))
+		{
+			
+		}
+		else if(Tab.equals("Swipe"))
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(srpSwipeBtn));
+			driver.findElement(srpSwipeBtn).click();
+			Thread.sleep(3000);
+		}
+	}
+	@And("^User selects date$")
+	public void User_selects_date() throws Throwable
+	{
+		pdp.selectDate(driver);
+    }
+	
+	@And("^Verify time field and other user details is mandatory in request tour form$")
+	public void Verify_time_field_and_other_user_details_is_mandatory_in_request_tour_form() throws Throwable
+	{
+		wait.until(ExpectedConditions.elementToBeClickable(requestTourSubmit));
+		driver.findElement(requestTourSubmit).click();
+		pdp.CheckMandatoryFieldsinRequestTourForm(driver);
+		
+	}
+	
+}
+	
+
+	
+

@@ -1,0 +1,544 @@
+/**
+ * @author Syed Zubair
+
+ *
+ */
+package Driver.stepDefs;
+
+import java.io.File;
+import java.util.NoSuchElementException;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import Driver.desiredCapabilities;
+import Driver.PropertyData;
+import ObjectRepository.PropertDetailsPage_OR;
+import ObjectRepository.Registration_OR;
+import ObjectRepository.SearchFilters_OR;
+import PageObjects.DiscoverTab_PO;
+import PageObjects.SearchFilters_PO;
+import PageObjects.commonFunctions;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class SanitySuiteStepDefinations extends desiredCapabilities implements Registration_OR , SearchFilters_OR, PropertDetailsPage_OR{
+	File appDir = new File("/Users/syedzubair/Desktop");
+    File app = new File(appDir,"Owners.apk");
+	WebElement element;
+	PropertyData prop = new PropertyData();
+	commonFunctions cf = new commonFunctions();
+	SearchFilters_PO sf = new SearchFilters_PO();
+	DiscoverTab_PO dt = new DiscoverTab_PO();
+
+
+    @Given("^Launch the Owners App$")
+	public void launch_the_Owners_App() throws Throwable {
+	    
+	   wait = new WebDriverWait(driver, 30);
+    	   wait.until(ExpectedConditions.presenceOfElementLocated(onboarding_SkipLink));
+    	   
+    	   System.out.println("platform name is "+prop.platformName);
+    	   if(prop.platformName.equalsIgnoreCase("Android"))
+    	   {
+    		   System.out.println("Step 1:Android");
+    	   }
+    	   else
+    	   {
+    		   System.out.println("Step 2: ios");
+    	   }
+
+     }
+    
+	@When("^User clicks on \"([^\"]*)\" option$")
+	public void user_clicks_on_option(String button) throws Throwable {
+       
+		if(button.equals("skip"))
+		{
+		driver.findElement(onboarding_SkipLink).click();
+		System.out.println("Skip link clicked");
+
+ 	   if(prop.platformName.equalsIgnoreCase("Android"))
+ 	   {
+ 			try {
+ 				wait = new WebDriverWait(driver, 20);
+ 				wait.until(ExpectedConditions.visibilityOfElementLocated(popUpMessage));
+ 				driver.findElement(allowPermission).click();
+ 			} catch (Exception e) {
+ 				System.out.println("Skip button not present...moving ahead..");
+ 			}
+ 	   }	
+ 			else
+ 			{
+ 				try {
+ 					wait = new WebDriverWait(driver, 20);
+ 					Alert al = driver.switchTo().alert();
+ 					al.accept();
+ 					Thread.sleep(4000);
+ 					Alert update = driver.switchTo().alert();
+ 					update.dismiss();
+ 					System.out.println("clicked on allow & cancelled update button");
+ 				} catch (Exception e) {
+ 					System.out.println("");
+ 				}
+ 			}
+	
+		}
+		else if(button.equals("SigninTabFooter"))
+		{
+			if(prop.platformName.equalsIgnoreCase("Android"))
+			{
+				
+            try
+            {
+            	wait.until(ExpectedConditions.elementToBeClickable(onboarding_SignInTabFooter));
+    			driver.findElement(onboarding_SignInTabFooter).click();
+    			System.out.println("Sign In button clicked");
+            }
+            catch(Exception e)
+            {
+            	wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(onboarding_SignInTabFooter));
+    			driver.findElement(onboarding_SignInTabFooter).click();
+    			System.out.println("clicked from catch block");
+
+            }
+            
+			
+			}
+			else
+			{
+				driver.findElement(iosonboarding_SignInTabFooter).click();
+				System.out.println("Sign In button clicked");
+			}
+		}
+		else if(button.equals("Register"))
+		{
+
+			driver.findElement(onboarding_RegisterBtn).click();
+			System.out.println("Register button clicked");
+			
+		}
+		else if(button.equals("Registration"))
+		{
+			if(prop.platformName.equalsIgnoreCase("Android"))
+			{
+                System.out.println("This is final Register option");
+                driver.navigate().back();
+    		        driver.findElement(onboarding_RegnRegisterBtn).click();
+    		        System.out.println("Clicked on Register Button");
+			}
+			else
+			{
+    		   
+          	     driver.findElement(onboarding_RegnRegisterBtn).click();
+     		     System.out.println("Clicked on Register Button");
+     		     Thread.sleep(7000);
+     		     Alert al = driver.switchTo().alert();
+  			     al.accept(); 
+			}
+		}
+		else if(button.equals("onboarding_SignInBtn"))
+		{
+			if(prop.platformName.equalsIgnoreCase("Android"))
+			{
+               driver.navigate().back();
+			  driver.findElement(onboarding_SignInBtn).click();
+			  System.out.println("Clicked on Sign In Button");
+			}
+			else
+			{
+				 element = driver.findElement(iosonboardingsignin);
+	             element.click();
+	   		     Thread.sleep(7000);
+	             Alert notifications = driver.switchTo().alert();
+	             notifications.accept();
+			}
+			
+		}
+		else if(button.equals("SignOut"))
+		{
+			
+			if(prop.platformName.equalsIgnoreCase("Android"))
+			{
+				cf.scrollToText(prop.SignOut, driver);
+				System.out.println("Scrolled down to the [Sign Out] link");
+
+				// Click on the "Sign Out" link
+				element = driver.findElement(onboarding_SignOutLink);
+				element.click();
+				System.out.println("Clicked on the [Sign Out] link");
+				wait.until(ExpectedConditions.presenceOfElementLocated(signOutOkBtn));
+				driver.findElement(signOutOkBtn).click();
+			}
+			else
+			{	
+				// Validate Sign-Out confirmation
+		         
+				element = driver.findElement(onboarding_RegnEmailId);
+				element.click();
+
+				// click on sign out
+				wait.until(ExpectedConditions.presenceOfElementLocated(iossignOutOkBtn));
+				driver.findElement(iossignOutOkBtn).click();
+				System.out.println("Clicked  on the Sign-Out option");
+				driver.findElement(By.id("Yes")).click();
+			}
+			
+		}
+		else if(button.equals("Next"))
+		{
+			// Navigate to Bed, Bath filters page
+            driver.findElement(onboarding_NextBtnToBedBath).click();
+			System.out.println("Navigated to the Bed, Bath filters page");
+			Thread.sleep(2000);
+		}
+		else if(button.equals("NextSaveSearchButton"))
+		{
+			// Click on Next(Save Search page)
+			element = driver.findElement(onboarding_NextToSaveSearch);
+			Assert.assertEquals(element.getText(), prop.nxtBtnTxt, "FAILED: NEXT button ->");
+			element.click();
+			System.out.println("Navigated to the Save Search page");
+		}
+		else if(button.equals("Sign in to save"))
+		{
+			// Click Sign In to save.
+			element = driver.findElement(onboarding_SignInToSaveBtn);
+			Assert.assertEquals(element.getText(), prop.singinToSaveBtn, "FAILED: Button label mismatched -> ");
+			System.out.println("Clicked on the [Sign In to save] button");
+			element.click();
+		}
+		else if(button.equals("surveyskiplink"))
+		{
+			element = driver.findElement(onboarding_SurveySkipLink);
+			Assert.assertEquals(element.getText(), prop.surveySkipBtnText, "FAILED: Button text validation -> ");
+			element.click();
+			System.out.println("Clicked on the [" + prop.surveySkipBtnText + "] button");
+			cf.allowLocationAccess(driver);
+		}
+		else if(button.equals("FiltersDone"))
+		{
+			// Navigate back to SRP with the updated filters.
+			element = driver.findElement(onboarding_FilertsDoneBtn);
+			element.click();
+			System.out.println("Clicked on the [Tick] button to confirm");
+			
+			//
+			wait.until(ExpectedConditions.visibilityOfElementLocated(onboarding_SRPsetFilters));
+
+			element = driver.findElement(onboarding_SRPsetFilters);
+			System.out.println("Navigated to SRP after resetting the filters");
+			Assert.assertEquals(element.getText(), "FILTERS", "FAILED: Set location validation on SRP -> ");
+			System.out.println("Set location validated on SRP as: " + prop.location);
+
+			// Switch to List View
+			element = driver.findElement(onboarding_SRPlistViewBtn);
+			element.click();
+			System.out.println("Switched to List View");
+			//
+		}
+		
+		//*******************//
+		// Open Notification tab
+		else if (button.equals("Notifications")) {
+			driver.findElement(profileNotification).click();
+		}
+		else if(button.equals("back")) 
+		{
+			driver.navigate().back();
+		}
+		else
+		{	
+			System.out.println("No option present to be clicked");
+		}
+	}
+
+	@When("^Enters \"([^\"]*)\"$")
+	public void enters(String field) throws Throwable {
+		
+		if (field.equals("First Name"))
+		{
+			// Enter First Name
+			element = driver.findElement(onboarding_RegnFirstName);
+			element.click();
+			element.sendKeys(prop.fName);
+			System.out.println("Entered the First Name: " + prop.fName);			
+		}
+		else if (field.equals("Last Name"))
+		{
+			element = driver.findElement(onboarding_RegnLastName);
+			element.click();
+			element.sendKeys(prop.lName);
+			System.out.println("Entered the Last Name: " + prop.lName);
+		}
+		else if (field.equals("email ID"))
+		{
+			element = driver.findElement(onboarding_RegnEmail);
+			element.click();
+			element.sendKeys(prop.email);
+			System.out.println("Entered the email ID: " + prop.email);
+			if(prop.platformName.equalsIgnoreCase("Android"))
+			{
+				System.out.println("No operation to perform");
+			}
+			else
+			{	
+				element.sendKeys(Keys.RETURN);
+
+			}
+		}
+		else if (field.equals("signinemailid"))
+		{
+			
+			if(prop.platformName.equalsIgnoreCase("Android"))
+			{
+				wait.until(ExpectedConditions.elementToBeClickable(onboarding_RegnEmail));
+				element = driver.findElement(onboarding_RegnEmail);
+				element.click();			
+			}
+			else
+			{	
+				driver.findElement(iosSigninButton).click();
+				element = driver.findElement(iossignin_Email);
+				element.click();
+            }
+			element.sendKeys(prop.signinemailID);
+			System.out.println("Entered the email ID: " + prop.signinemailID);
+	
+		}
+		else if(field.equals("Password"))
+		{	
+			element = driver.findElement(onboarding_RegnPassword);
+			element.click();
+			element.sendKeys(prop.pwd);
+			System.out.println("Entered the password: " + prop.pwd);
+			
+			
+		}
+		else if(field.equals("SigninPassword"))
+		{	
+			//if(prop.platformName.equalsIgnoreCase("Android"))
+			//{ 
+			element = driver.findElement(onboarding_RegnPassword);
+			element.click();
+			element.sendKeys(prop.signinpwd);
+			System.out.println("Entered the password: " + prop.signinpwd);
+			/*}
+			else
+			{	
+				element = driver.findElement(iosactual_password);
+				element.click();
+				element.sendKeys(prop.signinpwd);
+				System.out.println("Entered the password: " + prop.signinpwd);
+			}*/
+			
+		}
+		else
+		{	
+			System.out.println("No text present to be send");
+		}		
+	}
+	
+	@And("^Validate that user as successfully logged out$")
+	public void Validate_that_user_as_successfully_logged_out() throws Throwable {
+		
+		/*if(prop.platformName.equalsIgnoreCase("Android"))
+		{	
+	        // Validate Sign-Out confirmation
+			element = driver.findElement(signOutConfirmMsg);
+			System.out.println("the sign out text is"+element.getText());
+			Assert.assertEquals(element.getText(), prop.SignOutConfirmMsg, "FAILED: Sign-Out confirmation text");
+	         System.out.println("Sign-Out confirmation message validated as: " + element.getText());
+
+			// Validate presence of the Cancel button and click on the OK button
+			wait.until(ExpectedConditions.presenceOfElementLocated(signOutCancelBtn));
+			driver.findElement(signOutOkBtn).click();
+			System.out.println("Clicked OK on the Sign-Out confirmation snippet");
+		}
+		else
+		{	
+			System.out.println("No operation to perform");
+		}*/
+
+
+		// Validate that user logged-out
+		
+		if(prop.platformName.equalsIgnoreCase("Android"))
+		{
+			WebElement footersigninelement = (new WebDriverWait(driver, 30))
+					  .until(ExpectedConditions.presenceOfElementLocated(footerSignInBtnTxt));
+			footersigninelement.isDisplayed();		
+			element = driver.findElement(footerSignInBtnTxt);
+		Assert.assertEquals(element.getText(), prop.SignIn,
+				"FAILED: Me button failed to get replaced by Sign In button");
+		}
+		else
+		{
+			WebElement footersigninelement = (new WebDriverWait(driver, 30))
+					  .until(ExpectedConditions.presenceOfElementLocated(iosfooterSignInBtnTxt));
+			footersigninelement.isDisplayed();		
+			element = driver.findElement(iosfooterSignInBtnTxt);
+			Assert.assertEquals(element.getText(), prop.IOSLogin,
+					"FAILED: Me button failed to get replaced by Login button");
+		}
+		System.out.println("Validated that the user with email-Id [" + prop.emailID + "] Sign-Out successfully");	
+		
+		System.out.println("Syed Zubair the changes haven taken place");
+		
+	}
+
+	@Then("^Validate Sign in button replaced by Me button$")
+	public void validate_Sign_in_button_replaced_by_Me_button() throws Throwable {
+		// Validate user-registration => Sign in button replaced by Me button in
+				// the footer
+		WebElement element ;
+		        if(prop.platformName.equalsIgnoreCase("Android"))
+		        {
+		        	WebElement myDynamicElement = (new WebDriverWait(driver, 30))
+		  				  .until(ExpectedConditions.presenceOfElementLocated(onboarding_SignInTabFooter));
+		  		        myDynamicElement.isDisplayed();
+					element = driver.findElement(onboarding_SignInTabFooter);
+					 String MeButtonValue = element.getText();
+					 System.out.println("element value here is"+element.getText());
+						if (MeButtonValue.equals("Me"))
+						{
+							System.out.println("Sign in option replaced with Me button");
+						}
+						else
+						{	
+							System.out.println("Sign in button option not replaced with Me button");
+						}
+					 element.click();
+                }
+		        else
+		        {
+		        	WebElement myDynamicElement = (new WebDriverWait(driver, 30))
+		  				  .until(ExpectedConditions.presenceOfElementLocated(iosonboarding_SignInTabFooter));
+		  		        myDynamicElement.isDisplayed();
+					element = driver.findElement(iosonboarding_SignInTabFooter);
+					 String MeButtonValue = element.getText();
+					 System.out.println("element value here is"+element.getText());
+						if (MeButtonValue.equals("Me"))
+						{
+							System.out.println("Sign in option replaced with Me button");
+						}
+						else
+						{	
+							System.out.println("Sign in button option not replaced with Me button");
+						}
+					element.click();
+
+                }
+		        
+		        // Click on the 'Me' footer button
+				Boolean DisplayedEmailId;
+				try
+				{
+					
+					driver.findElement(onboarding_RegnEmailId).isDisplayed();
+			        DisplayedEmailId = true;
+                    System.out.println("Entered email id is  saved");
+                    System.out.println("the value is"+DisplayedEmailId);
+
+				}
+				catch (NoSuchElementException e)
+				{
+					 DisplayedEmailId = false;
+                     e.printStackTrace();
+                     System.out.println("Entered email id is not saved");
+				}
+				System.out.println("User-registration validated -> Logged in as: " + prop.email);
+				System.out.println("===========================\n PASSED TEST CASE: 1");
+				
+				
+	}
+	
+	@Given("^User enters city \"([^\"]*)\" in search Bar$")
+	public void user_enters_city_in_search_Bar(String Location) throws Throwable {
+         // Search for some city name (Miami,FL).
+		cf.searchMapSRP(Location, driver);
+	}
+	
+	@And("^select and apply bed bath and price filters$")
+	public void select_and_apply_bed_bath_and_price_filters() throws Throwable {	
+		// Applying filter
+		sf.selectAndApplyFilter(driver);
+	}
+	
+	@Given("^Navigates to \"([^\"]*)\" Tab$")
+	public void navigates_to_Tab(String NavigationTab) throws Throwable {
+		if(NavigationTab.equals("Discover"))
+			dt.navigateDiscoverTab(driver);
+		
+		else if(NavigationTab.equals("Search"))
+			dt.navigateSearchTab(driver);
+		
+		else if(NavigationTab.equals("Favourite"))
+			dt.navigateFavouriteTab(driver);
+	}
+	
+	@When("^User enters city \"([^\"]*)\" in onboarding search Bar$")
+	public void user_enters_city_in_onboarding_search_Bar(String onboardingLocation) throws Throwable {
+		
+		// Open app, click in the Search text box
+		driver.findElement(onboarding_SearchBoxDefaultText).click();
+		System.out.println("App opened and clicked in the Search text box");
+
+		// Enter some city name (Miami) in the text box.
+		driver.findElement(onboarding_SuggestionSearchBox).sendKeys(prop.setLocation1);
+		System.out.println("Entered [" + prop.setLocation1 + "] in the text box.");
+		wait.until(ExpectedConditions.presenceOfElementLocated(onboarding_SearchSuggestion3));
+		// Click on the suggestion (Miami, FL).
+		element = driver.findElement(onboarding_SearchSuggestion1City);
+		prop.location = element.getText();
+		prop.location += ", " + driver.findElement(onboarding_SearchSuggestion1State).getText();
+		System.out.println("Opted Search suggestion(location) is: " + prop.location);
+		element.click();    
+	}
+	
+	@When("^set price range picker to \\$(\\d+)k$")
+	public void set_price_range_picker_to_$_k(int setpickerValue) throws Throwable {
+		//cf.scrollToText("Lot Size", driver);
+		
+		/*-------scroll to price range section*/
+		wait = new WebDriverWait(driver, 20);
+		cf.scrollToText("Baths", driver);
+		Thread.sleep(2000);
+        cf.verticalScrollUpwards(driver);
+        Thread.sleep(2000);
+		/*-------scrolling ended----*/
+		
+		driver.findElement(onboarding_PriceRangeLink).click();
+		element = driver.findElement(onboarding_PriceRangePickerTitle);
+		Assert.assertEquals(element.getText(), prop.priceRangePickerTitle,
+				"FAILED: Price range picker title validation -> ");
+		System.out.println("Opened the [" + element.getText() + "] Filter picker");
+		element = driver.findElement(onboarding_PickerMaxPriceDownArrow);
+		for (int i = 0; i < 7; i++)
+			element.click();
+		System.out.println("Clicked the MaxPrice down-arrow multiple times to reset Max Price");
+		element = driver.findElement(onboarding_PickerNewMaxPrice);
+		Assert.assertEquals(element.getText(), prop.maxPriceResetValue,
+				"FAILED: Re-set Max Price range validation -> ");
+		System.out.println("Max Price is reset to: " + element.getText());
+		element = driver.findElement(onboarding_PricePickerSaveBtn);
+		Assert.assertEquals(element.getText(), prop.pricePickerSaveBtn,
+				"FAILED: button text validation on reset Price-range snippet -> ");
+		element.click();
+		System.out.println("Clicked on the SAVE button");
+		element = driver.findElement(onboarding_FilertsMacSetValue);
+		Assert.assertEquals(element.getText().substring(1), prop.maxPriceResetValue,
+				"FAILED: Re-set Max Price validation on Filters page -> ");
+	}	
+	@Then("^User closes the app$")
+	public void User_closes_the_app() throws Throwable {
+		driver.closeApp();
+	}
+	
+	
+}

@@ -1,0 +1,275 @@
+package PageObjects;
+
+import java.net.MalformedURLException;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
+import Driver.PropertyData;
+import ObjectRepository.FavouriteProperty_OR;
+import ObjectRepository.OpenHouse_OR;
+import ObjectRepository.PropertDetailsPage_OR;
+import ObjectRepository.Registration_OR;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+
+public class AddAssetForPDP_PO implements FavouriteProperty_OR , Registration_OR ,PropertDetailsPage_OR, OpenHouse_OR{
+
+	AppiumDriver<MobileElement> driver;
+	WebElement element;
+	WebDriverWait wait;
+	commonFunctions cf = new commonFunctions();
+	PropertyData pr = new PropertyData();
+	FavouriteProperty_PO ft = new FavouriteProperty_PO();
+	EditDeleteAssest_PO ed = new EditDeleteAssest_PO();
+
+	public void addDeleteMultilineNotes(AppiumDriver<MobileElement> driver) throws InterruptedException {
+		cf.relaunchApp(driver);
+		driver.findElement(clickFavouriteTab).click();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		Thread.sleep(2000);
+		driver.findElement(editTextField).click();
+		ft.confirmDisclaimer(driver);
+		driver.findElement(editTextField).sendKeys(
+				"In Word 2013 or Word 2010, on the Review tab, in the Tracking group, in the Show Markup list, choose Comments and make sure a check mark in a box appears next to the option. Choose Comments again to clear the check mark and hide comments.");
+		driver.hideKeyboard();
+		driver.findElement(saveAssetButton).click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(sendTextProgressBar));
+		System.out.println("Multiline asset addition completed..");
+		String multilineComment = driver.findElement(commentTextView).getText();
+		if (multilineComment.contains("...")) {
+			System.out.println(
+					driver.findElement(commentTextView).getText() + "\n multiline comment added successfully..");
+		}
+        driver.findElement(showAllText).click();
+		Thread.sleep(3000);
+		String multilineCommentExpanded = driver.findElement(commentTextView).getText();
+		System.out.println("Multilne comment is: " + multilineCommentExpanded);
+		driver.findElement(commentTextView).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(commentdeleteButtonInEditPage));
+		driver.findElement(commentdeleteButtonInEditPage).click();
+		driver.findElement(delteNoteDeleteButton).click();
+		Thread.sleep(2000);
+	}
+
+	public void addImageToViewInPDP(AppiumDriver<MobileElement> driver)
+			throws InterruptedException, MalformedURLException {
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.elementToBeClickable(clickFavouriteTab));
+		driver.findElement(clickFavouriteTab).click();
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		ft.swipePhotosInFavourite(driver);
+		int totalImageCountInFavTab = Integer
+				.parseInt(driver.findElement(imageConatinerPhotoCount).getText().split("/")[1]);
+		System.out.println("Total Image before adding : " + totalImageCountInFavTab);
+		ed.addImageAssetFromCamera(driver);
+		driver.findElement(favPropertyPrice).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(imageCountInPDP));
+		int totalImageCountInPDP = Integer.parseInt(driver.findElement(imageCountInPDP).getText().split("/")[1]);
+		System.out.println("Total Image count in PDP : " + totalImageCountInFavTab);
+		if (totalImageCountInFavTab < totalImageCountInPDP)
+			System.out.println("Image count updated from " + totalImageCountInFavTab + " to " + totalImageCountInPDP);
+		else
+			System.out.println("**Image count not updated..!**");
+		driver.findElement(imageCountInPDP).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpGalleryFavIncon));
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(pdpGalleryRequestTour));
+		cf.scrollToText("User Photos", driver);
+		cf.verticalScrollUpwards(driver);
+		Thread.sleep(4000);
+		driver.findElement(pdpGalleryPropertyPrice).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpGalleryNote));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpGalleryDeleteImage));
+		System.out.println(driver.findElement(pdpGalleryNote).getText() + " -- Text verified..");
+		wait.until(ExpectedConditions.elementToBeClickable(pdpGalleryDeleteImage));
+		driver.findElement(pdpGalleryDeleteImage).click();
+		wait.until(ExpectedConditions.elementToBeClickable(pdpGalleryBackButton));
+		driver.findElement(pdpGalleryBackButton).click();
+		Thread.sleep(2000);
+		driver.findElement(pdpGalleryBackButton).click();
+		Thread.sleep(2000);
+        Assert.assertEquals(totalImageCountInPDP - 1, totalImageCountInPDP - 1,
+				"Image count updated in the PDP header as well..!!");
+		System.out.println("Total image count in PDP after delete image : " + (totalImageCountInPDP - 1));
+		cf.scrollToText("Notes", driver);
+		//cf.verticalScrollUpwards(driver);
+		String comment = driver.findElement(pdpCommentView).getText();
+		try {
+			Assert.assertEquals(comment, "Image from camera added as asset..!!", "Comment text not verified..");
+		} catch (Exception e) {
+		}
+	}
+
+	public void addAssetToViewInFavTab(AppiumDriver<MobileElement> driver, String textToEnter)
+			throws InterruptedException, MalformedURLException {
+		//cf.relaunchApp(driver);
+		//ft.checkNoSavedListingsText(driver);
+		wait = new WebDriverWait(driver, 10);
+		cf.searchMapSRP("Newark,NJ", driver);
+		Thread.sleep(2000);
+		driver.findElement(listSRPTab).click();
+		Thread.sleep(1000);
+		cf.verticalScrollUpwards(driver);
+		cf.verticalScrollUpwards(driver);
+		driver.findElement(priceInList).click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(pdpfavIcon));
+		String pdpPrice = driver.findElement(pdpPriceView).getText();
+		driver.findElement(pdpSchoolSection).click();
+		Thread.sleep(2000);
+		try
+		{
+			cf.scrollToText("Notes", driver);
+
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("Cannot scroll to Noted Section");
+		}
+		driver.findElement(editTextField).click();
+		ft.confirmDisclaimer(driver);
+		driver.findElement(editTextField).sendKeys(textToEnter);
+		driver.hideKeyboard();
+		Thread.sleep(2000);
+		driver.findElement(saveNoteButton).click();
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(pdpFavPropertyAlertTitle));
+			System.out.println(driver.findElement(pdpFavPropertyALertMessage).getText());
+			System.out.println(driver.findElement(pdpFavPropertyALertMessage).getText() + "-- Text Verfied..!");
+			driver.findElement(doNotAskCheckBox).click();
+			driver.findElement(favButtonInAlert).click();
+		} catch (Exception ex) {
+			System.out.println("Favourite property alert message is not shown..!!");
+		}
+
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(sendTextProgressBar));
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(commentTextView));
+		} catch (Exception e) {
+			System.out.println("Comment added but not relfected in the view..");
+		}
+		System.out.println("Asset addition completed..");
+		cf.scrollToText(pdpPrice, driver);
+		if (driver.findElement(pdpfavIcon).isSelected() == true)
+			System.out.println("Property is automatically favorited..!!");
+		else
+			driver.findElement(pdpfavIcon).click();
+        driver.findElement(pdpBackButton).click();
+		Thread.sleep(2000);
+		driver.findElement(clickFavouriteTab).click();
+		Thread.sleep(2000);
+         String favPrice = driver.findElement(favPropertyPrice).getText();
+		Assert.assertEquals(pdpPrice, favPrice, "Property Price does not match..!!");
+		String lastComment = driver.findElement(commentTextView).getText().trim().substring(12);
+		Assert.assertEquals(textToEnter.trim(), lastComment.trim(), "Comment added from PDP not macthing in Fav tab/.");
+		System.out.println("Comment added from PDP are reflecting in Fav tab properly.");
+		driver.findElement(commentTextView).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(commentdeleteButtonInEditPage));
+		driver.findElement(commentdeleteButtonInEditPage).click();
+		driver.findElement(delteNoteDeleteButton).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(imageContainerInFav));
+	}
+
+	public void checkToastMessageInPDP(AppiumDriver<MobileElement> driver)
+			throws InterruptedException, MalformedURLException {
+	    ft.checkNoSavedListingsText(driver);
+		wait = new WebDriverWait(driver, 5);
+		driver.findElement(navigateSearchTab).click();
+		driver.findElement(listSRPTab).click();
+		cf.verticalScrollUpwards(driver);
+		driver.findElement(priceInList).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpfavIcon));
+		driver.findElement(pdpfavIcon).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(favToastMessage));
+		System.out.println("Toast Message shown at: " + driver.getDeviceTime());
+		Thread.sleep(5000);
+		System.out.println("waiting for element for be invisible");
+		//wait.until(ExpectedConditions.invisibilityOfElementLocated(favToastMessage));
+		Boolean elementpresent ;
+		try
+		{
+			driver.findElement(favToastMessage).isDisplayed();
+			elementpresent = true;
+			System.out.println("Favourite text element is still not invisible");
+		}
+		catch(Exception e)
+		{
+			System.out.println("Favourite text is no more visible");
+			elementpresent = false;
+		}
+		System.out.println("Toast Message removed at: " + driver.getDeviceTime());
+        driver.findElement(pdpfavIcon).click();
+		Thread.sleep(1000);
+		driver.findElement(pdpfavIcon).click();
+		Thread.sleep(3000);
+		driver.findElement(favToastMessage).click();
+		System.out.println("Clicked on the Fav Toast message..!!");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(imageContainerInFav));
+		System.out.println("App is navigated to Fav tab. Property is visible here...");
+	}
+
+	public void addMultipleAssetInPDP(AppiumDriver<MobileElement> driver)
+			throws InterruptedException, MalformedURLException {
+		wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.elementToBeClickable(clickFavouriteTab));
+		driver.findElement(clickFavouriteTab).click();
+		wait.until(ExpectedConditions.presenceOfElementLocated(favPropertyPrice));
+		driver.findElement(favPropertyPrice).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpfavIcon));
+		try
+		{
+			cf.scrollToText("Notes", driver);
+
+		}
+		catch(NoSuchElementException e)
+		{
+			System.out.println("Cannot scroll to Notes Section");
+		}
+		String comment = "new comment ";
+		for (int i = 0; i < 5; i++) {
+			Thread.sleep(2000);
+			driver.findElement(editTextField).click();
+			ft.confirmDisclaimer(driver);
+			driver.findElement(editTextField).sendKeys(comment + Integer.toString(i + 1));
+			driver.hideKeyboard();
+			Thread.sleep(2000);
+			try
+			{
+				cf.scrollToText("Save", driver);
+				//cf.scrollToText("Estimated monthly payment", driver);
+				driver.findElement(saveAssetButton);
+				driver.findElement(saveAssetButton).isDisplayed();
+	            driver.findElement(saveAssetButton).click();
+
+			}
+			catch(Exception e)
+			{
+	            driver.findElement(saveAssetButton).click();
+
+	         }
+			//driver.findElement(saveNoteButton).click();
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(sendTextProgressBar));
+		}
+		System.out.println("Multiple Asset addition completed..");
+		driver.findElement(pdpBackButton).click();
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(showAllText));
+			Thread.sleep(3000);
+			driver.findElement(showAllText).click();
+			System.out.println("Clicked on Show All Text..!");
+		} catch (Exception e1) {
+		}
+		Thread.sleep(3000);
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(collapseAllButton));
+			driver.findElement(collapseAllButton).click();
+			System.out.println("Clicked on Collapse Text..!");
+		} catch (Exception e2) {
+		}
+		ed.deleteCommentsFromProperty(driver);
+	}
+
+}

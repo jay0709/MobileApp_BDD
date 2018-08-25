@@ -1,0 +1,392 @@
+/**
+ * @author Syed Zubair
+
+ *
+ */
+package Driver.stepDefs;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.Assert;
+
+import Driver.PropertyData;
+import Driver.desiredCapabilities;
+import ObjectRepository.PropertDetailsPage_OR;
+import ObjectRepository.Registration_OR;
+import PageObjects.DiscoverTab_PO;
+import PageObjects.FavouriteProperty_PO;
+import PageObjects.PropertDetailsPage_PO;
+import PageObjects.SearchFilters_PO;
+import PageObjects.commonFunctions;
+import cucumber.api.CucumberOptions;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+@CucumberOptions
+public class ValidatingPresenceOfTabsAndButtons extends desiredCapabilities implements Registration_OR ,PropertDetailsPage_OR{
+	WebElement element;
+	PropertyData prop = new PropertyData();
+    commonFunctions cf = new commonFunctions();
+	FavouriteProperty_PO fp = new FavouriteProperty_PO();
+	SearchFilters_PO sf = new SearchFilters_PO();
+	DiscoverTab_PO dt = new DiscoverTab_PO();
+	PropertDetailsPage_PO pdp = new PropertDetailsPage_PO();
+
+	@Given("^Validate presence of \"([^\"]*)\" Tab$")
+	public void validate_presence_of_Tab(String Tabs) throws Throwable {
+		System.out.println("drver 2 value is"+driver);
+		if (Tabs.equals("Map"))
+		{
+			System.out.println(driver);
+			
+		        // Validate presence of Map button
+			    wait.until(ExpectedConditions.presenceOfElementLocated(srpMapBtn));
+				element = driver.findElement(srpMapBtn);
+				Assert.assertEquals(
+						element.getText().contentEquals(prop.mapBtnTxt) && element.isEnabled() && element.isSelected(), true,
+						"MISSING: Map button text/state");
+				element = driver.findElement(onboarding_SRPLocationTargetBtn);
+				Assert.assertEquals(element.isDisplayed(), true, "MISSING: location button");
+				System.out.println("location Target button Validated");
+				System.out.println("Verified that, [Map] is the default enabled view");
+				
+		}
+		else if(Tabs.equals("List"))
+		{
+			// Validate presence of List button
+			element = driver.findElement(srpListBtn);
+			element.click();
+			System.out.println("Verified that, the btuton text is [List], and it is Selected");
+			element = driver.findElement(onboarding_SRPsortBtn);
+			Assert.assertEquals(element.isDisplayed() && element.getText().contentEquals(prop.srpSortBtnTxt), true,
+					"MISSING: location button");
+			element = driver.findElement(onboarding_SRPfavoriteBtn);
+			Assert.assertEquals(element.isDisplayed(), true, "MISSING: favorite button");
+			System.out.println("Verified that, the view is switched to [List]");
+		}
+		else if(Tabs.equals("Swipe"))
+		{
+			// Validate presence of Swipe button
+			element = driver.findElement(srpSwipeBtn);
+			Assert.assertEquals(
+					element.getText().contentEquals(prop.swipeBtnTxt) && element.isEnabled() && element.isDisplayed(), true,
+					"MISSING: Swipe button/text/state");
+			element.click();
+			Thread.sleep(4000);
+			element = driver.findElement(onboarding_SRPpassBtn);
+			Assert.assertEquals(element.getText(), prop.srpPassBtnTxt, "MISSING: Pass button");
+			Assert.assertEquals(element.isDisplayed(), true, "MISSING: Pass button");
+			System.out.println("Verified that, the view is switched to [Swipe]");
+			// Validate presence of Filters link
+			element = driver.findElement(onboarding_SRPsetFilters);
+			element.click();
+			element = driver.findElement(onboarding_filtersClearAllLink);
+			Assert.assertEquals(element.getText().contentEquals(prop.filtersClearAllTxt) && element.isDisplayed(), true,
+					"MISSING: [Clear All] button");
+			System.out.println("Filters screen checked");
+			element = driver.findElement(onboarding_FilertsDoneBtn);
+			element.click();
+			System.out.println("Filters screen closed");
+		    wait.until(ExpectedConditions.presenceOfElementLocated(onboarding_SRPpassBtn));
+			element = driver.findElement(onboarding_SRPpassBtn);
+			Assert.assertEquals(element.isDisplayed() && element.getText().contentEquals(prop.srpPassBtnTxt), true,
+					"MISSING: Pass button");
+			System.out.println("Verified that the view is reverted back to [Swipe]");
+
+			// Validate presence of Saved button by switching to List and Map views
+			driver.findElement(srpListBtn).click(); // Switch to List view
+			element = driver.findElement(onboarding_SRPsavedBtnText);
+			Assert.assertEquals(element.getText(), prop.srpSaveSrchBtnTxt, "MISSING: SAVED button");
+			driver.findElement(srpMapBtn).click(); // Switch to List view
+			element = driver.findElement(onboarding_SRPsavedBtnText);
+			Assert.assertEquals(element.getText(), prop.srpSaveSrchBtnTxt, "MISSING: SAVED button");
+			System.out.println("SAVED search button checked");
+
+			System.out.println("");
+			System.out.println("===========================\n Test CASE Passed , Swipe button validated");
+		}
+		else
+		{	
+			System.out.println("No Tab is present");
+		}
+	    
+	}
+
+	@Given("^validate \"([^\"]*)\" section$")
+	public void validate_section(String sections) throws Throwable {
+		
+		if(sections.equals("recently viewed section"))
+		{
+			dt.recentlyViewedItems(driver);
+
+		}
+		else if(sections.equals("saved search"))
+		{
+			// Validating Saved Search
+			cf.scrollToText("Saved Searches", driver);
+			dt.savedSearches(driver);
+
+		}
+		else if(sections.equals("Advice"))
+		{
+			cf.scrollToText("Advice", driver);
+			dt.adviceSectionValidation(driver);
+			System.out.println("===========================\n TEST CASE PASSED");
+		}
+		//
+		else if(sections.equals("property details like price,bath sqft etc"))
+		{
+			pdp.validatePropertyDetails(driver);
+
+		}
+		else if(sections.equals("school"))
+		{
+			//cf.scrollToText("SCHOOLS", driver);
+			
+			cf.scrollToText("SCHOOLS", driver);
+			pdp.validateSchoolSection(driver);
+		}
+		else if(sections.equals("Notes"))
+		{
+			// Validating Notes section
+			pdp.validateNotesSection(driver);
+		}
+		else if(sections.equals("property status"))
+		{
+			// validate property features
+			pdp.validatePropertyKeyDetails(driver);
+		}
+		else if(sections.equals("property tax"))
+		{
+			// validate property Tax
+			pdp.validateProertyTax(driver);
+		}
+		else if(sections.equals("estimated monthly payment & mortagage calculator"))
+		{
+			// validate other details like estimated monthly payment & mortagage calculator
+			pdp.validateOtherDetails(driver);
+		}
+		else if(sections.equals("property type"))
+		{
+			// validate FSBO MLS type
+            pdp.validatePropertyType(driver);
+			System.out.println("===========================\n TEST CASE PASSED");
+		}
+		else if(sections.equals("Recommended Properties"))
+		{
+			
+		}
+		else if(sections.equals("Notify me when price changes"))
+		{
+			String NotifyMessage = "Great! We will notify you when the property price changes! You can change your notification settings from the \"Notifications\" menu on your Profile.";
+			String ActualNotifyMessage = driver.findElement(NotifyMeMessage).getText();
+			Assert.assertEquals(NotifyMessage, ActualNotifyMessage,"Notify Me Message is same");
+			driver.findElement(NotifyMessageClose).click();
+		}
+		else
+		{	
+			System.out.println("No sections are present to validate");
+		}	    
+	}
+	
+	@Then("^compare property details from List view & Favourite tab$")
+	public void compare_property_details_from_List_view_Favourite_tab() throws Throwable {
+		
+		System.out.println("driver value here:"+driver);
+		fp.verifyPorpertyDetailsFavourite(driver);
+		System.out.println("===========================\n TEST CASE PASSED");
+	}
+	
+	@Then("^Validate filters applied$")
+	public void Validate_filters_applied() throws Throwable {
+	
+		sf.validateFiltersApplied(driver);
+
+		System.out.println("===========================\n TEST CASE PASSED");
+		System.out.println("===========================");
+	}
+	
+	@When("^Validate text \"([^\"]*)\" on page$")
+	public void validate_text_on_page(String validationText) throws Throwable {
+		
+	     	if(validationText.equals("What's your price range"))
+	     	{
+	     	// Validate text on the filters/preferences pages.
+	    		wait.until(ExpectedConditions.presenceOfElementLocated(onboarding_FiltersPageText1));
+	    		System.out.println("Navigated to the Filters screen");
+	    		element = driver.findElement(onboarding_FiltersPageText1);
+	    		Assert.assertEquals(element.getText(), prop.FilterPgPriceRangeText1, "MISSING: Price-range text");
+	    		System.out.println("Validated line #1 on the filters/preferences pages as: " + element.getText());
+	     	}
+	     	else if(validationText.equals("Don't worry - you can change this later"))
+	     	{
+	     		element = driver.findElement(onboarding_FiltersPageText2);
+	    		    Assert.assertEquals(element.getText(), prop.FilterPgPriceRangeText2, "MISSING: TextLine #2");
+	    		    System.out.println("Validated line #2 on the filters/preferences pages as: " + element.getText());
+	     	}
+	     	else if(validationText.equals("Want to save this search"))
+	     	{
+	     	// Validate text line1 on Save Search page
+	    		element = driver.findElement(onboarding_SaveSearchText1);
+	    		Assert.assertEquals(element.getText(), prop.saveSearchPgText1, "FAILED: text mismatch");
+	    		System.out.println("Validated text line1 on Save Search page as: " + element.getText());
+	     	}
+	     	else if(validationText.equals("Sign in to save it - it's that easy"))
+	     	{
+	     	// Validate text line 2 on Save Search page
+	    		element = driver.findElement(onboarding_SaveSearchText2);
+	    		Assert.assertEquals(element.getText(), prop.saveSearchPgText2, "FAILED: text mismatch in Line2");
+	    		System.out.println("Validated text line2 on Save Search page as: " + element.getText());
+	     	}
+	     	else if(validationText.equals("tell us about your home search"))
+	     	{
+	     	// Skip the [Tell us about your home search] page
+	    		wait.until(ExpectedConditions.presenceOfElementLocated(onboarding_SendSurveyBtn));
+	    		element = driver.findElement(onboarding_SurveyPageText);
+	    		Assert.assertEquals(element.getText(), prop.surveyTitle, "FAILED: text validation -> ");
+	    		System.out.println("Navigated to the (Survey) [" + prop.surveyTitle + "] page");
+	    		System.out.println("Validated the default text on the page as: " + element.getText());
+	     	}
+	     	else
+	     	{	
+	     		System.out.println("No Text available for validation");
+	     	}
+	    
+	}
+	@When("^Set & Verify \"([^\"]*)\"$")
+	public void set_Verify(String filter) throws Throwable {
+		
+		if(filter.equals("Max price filter"))
+		{	
+			// Set and assert Max price filter
+			element = driver.findElement(onboarding_FilterMaxPriceDownArrow);
+			for (int i = 0; i < 4; i++)
+				element.click();
+			element = driver.findElement(onboarding_FilterMaxPriceUPArrow);
+			element.click();
+			Thread.sleep(1000);
+			element = driver.findElement(onboarding_SetMaxPrice);
+			prop.searchFilters = "-$" + element.getText();
+			Assert.assertEquals(element.getText(), prop.maxPriceSetValue, "FAILED: max-price value");
+			System.out.println("Max price filter set to: " + element.getText());
+		}
+		else if(filter.equals("Min price filter"))
+		{
+			// Set and assert Min price filter
+			driver.findElement(onboarding_FilterMinPriceDownArrow).click();
+			Thread.sleep(1000);
+			element = driver.findElement(onboarding_SetMinPrice);
+			prop.searchFilters = " $" + element.getText() + prop.searchFilters;
+			Assert.assertEquals(element.getText(), prop.minPriceSetValue, "FAILED: min-price value");
+			System.out.println("Min price filter set to: " + element.getText());
+		}
+		else
+		{	
+			System.out.println("No filter available to set & verify");
+		}
+	    
+	}
+	
+	@When("^set and validate any \"([^\"]*)\" value$")
+	public void set_and_validate_any_value(String houseField) throws Throwable {
+		
+		if(houseField.equals("Bath"))
+		{
+			// Set and validate min baths
+			element = driver.findElement(onboarding_SetMinBath);
+			Assert.assertEquals(element.getText(), prop.minBathSetValue, "FAILED: min-bath value");
+			prop.searchFilters = element.getText() + " baths," + prop.searchFilters;
+			System.out.println("Min baths set to: " + element.getText());
+			element.click();
+		}
+		else if(houseField.equals("Bed"))
+		{
+			// Set and validate min beds
+			element = driver.findElement(onboarding_SetMinBed);
+			Assert.assertEquals(element.getText(), prop.minBedSetValue, "FAILED: min-bed value");
+			prop.searchFilters = element.getText() + " beds, " + prop.searchFilters;
+			System.out.println("Min beds set to: " + element.getText());
+			element.click();
+			System.out.println("User set SearchFilters are: " + prop.searchFilters);
+		}
+		else
+		{	
+			System.out.println("No houseField to set and validate");
+		}
+	    
+	}
+	
+	@When("^validate Location \"([^\"]*)\" on save search page$")
+	public void validate_Location_on_save_search_page(String arg1) throws Throwable {
+		// Validate Location on Save Search page
+	    element = driver.findElement(onboarding_SaveSearchLocation);
+	    System.out.println("Location here is"+element.getText());
+		Assert.assertEquals(element.getText(), prop.location, "FAILED: Location mismatched");
+		System.out.println("Validated set Location on Save Search page as: " + element.getText());
+	}
+	
+	@When("^Validate set price range - min & max and bed count$")
+	public void validate_set_price_range_min_max_and_bed_count() throws Throwable {
+		
+		//Validate User set Search Filters [Price range(min, max) & bed, bath ,counts] on Save Search page
+		element = driver.findElement(onboarding_SaveSearchPriceFilters);
+		System.out.println("Re-validated User set Search Filters on the [Save Search] page as: " + element.getText());                            		
+
+	}
+	
+	@When("^Validate filtercount on SRP page and click on filter option$")
+	public void validate_filtercount_on_SRP_page() throws Throwable {
+	    
+		// Validate set filters count on SRP and navigate to the filters page
+        element = driver.findElement(SRP_FilterCount);
+		Assert.assertEquals(element.getText(), prop.srpFilterCount, "FAILED: Set filter count validation -> ");
+		System.out.println("No. of filters set = " + element.getText());
+		element.click();
+		System.out.println("Clicked on the Filters count");
+	}
+	
+	@When("^Validate presence of saved button and it is enabled$")
+	public void validate_presence_of_button_and_it_is_enabled() throws Throwable {
+		
+		// Verify that the Saved button is present and is enabled on SRP
+				element = driver.findElement(onboarding_SRPsavedBtn);
+				Assert.assertEquals((element.isDisplayed() && element.isEnabled()), true,
+						"FAILED: validation of the [SAVED] button on SRP -> ");
+				element = driver.findElement(onboarding_SRPsavedBtnText);
+				System.out.println("Verified that, the [" + element.getText() + "] button is present and is enabled on SRP");
+	}
+
+	@When("^Validate price,bed,bath count and Location on SRP page$")
+	public void validate_price_bed_bath_count_and_Location_on_SRP_page() throws Throwable {
+		// Validate Set filters(Price-range, Bed/Bath-Count & Location) against
+				// a random property on SRP
+		cf.verticalScrollUpwards(driver);
+		// Price-Range
+		element = driver.findElement(onboarding_SRPpropertyPrice);
+		System.out.println("Property price = " + element.getText());
+		prop.minPrice = Integer.parseInt(prop.searchFilters.substring(20, 23).replace("k", "000"));
+		prop.maxPrice = Integer.parseInt(prop.searchFilters.substring(25).replace("k", "000"));
+		System.out.println("Min-Max Price Filter set to: $" + prop.minPrice + " - $" + prop.maxPrice);
+		prop.propertyPrice = Integer.parseInt(element.getText().substring(1).replace(",", ""));
+		System.out.println("Parsed property price = " + prop.propertyPrice);
+		System.out.println("Randon property Price [" + prop.propertyPrice + "] validated against the set filter: "
+				+ prop.searchFilters.substring(19));
+		// Bed, Bath count
+		element = driver.findElement(onboarding_SRPpropertyBedBathCount);
+		System.out.println("Property Bed-Bath-Sft values = " + element.getText());
+
+		prop.beds = Integer.parseInt(element.getText().substring(0, 1));
+		prop.baths = Integer.parseInt(element.getText().substring(9, 10));
+		System.out.println("No. of Beds = " + prop.beds);
+		System.out.println("No. of Baths = " + prop.baths);
+		System.out.println("Randon property Bed-Bath count [" + element.getText().substring(0, 16)
+				+ "] validated against the set filter: " + prop.minBedSetValue + " beds, " + prop.minBathSetValue
+				+ " baths");
+		// Location
+		prop.propertylocation = driver.findElement(onboarding_SRPpropertyLocation).getText();
+		System.out.println("Property location = " + prop.propertylocation);
+		System.out.println("Randon property location [" + prop.propertylocation + "] validated against the set filter: "
+				+ prop.location);
+		System.out.println("===========================\n Test case passed");
+	}	
+}
