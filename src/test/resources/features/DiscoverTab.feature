@@ -1,4 +1,4 @@
-#@Author:- jayabrata
+#@Author:- Syed Zubair Mehdi
 @Regression
 Feature: Discover Tab
 
@@ -6,7 +6,7 @@ Feature: Discover Tab
     Given Launch the Owners App
     When User clicks on "skip" option
 
-  Scenario: As UnAuthenticated user i should see "Recently Viewed" & "Advice" Section (TC-13139),(TC-13141),(TC-13146),(TC-13144)
+  Scenario: As UnAuthenticated user i should see "Recently Viewed" & "Advice" Section (TC-13139),(TC-13141),(TC-13146),(TC-13144) (TC-8511)	
     When User enters city "Concorde,CA" in search Bar
     And User Clicks on any property to navigate to pdp page
     And User clicks on "back" option
@@ -15,7 +15,7 @@ Feature: Discover Tab
     And validate "Advice" section
     Then User closes the app
 
-  Scenario: As Authenticated user i should see "Recently Viewed" & "Advice" Section(TC-13139),(TC-13141)
+  Scenario: As Authenticated user i should see "Recently Viewed" & "Advice" Section(TC-13139),(TC-13141) (TC-2749) (TC-2748) (TC-9124)
     And User clicks on "SigninTabFooter" option
     And Enters "signinemailid"
     And Enters "SigninPassword"
@@ -28,7 +28,7 @@ Feature: Discover Tab
     And validate "Advice" section
     Then User closes the app
 
-  Scenario: As an user i should be able to Navigate b/w different tabs(TC-13143),(TC-13164),(TC-13165),(TC-13166),(TC-13167)
+  Scenario: As an user i should be able to Navigate b/w different tabs(TC-13143),(TC-13164),(TC-13165),(TC-13166),(TC-13167) (TC-2740)
     And User clicks on "SigninTabFooter" option
     And Enters "signinemailid"
     And Enters "SigninPassword"
@@ -42,7 +42,7 @@ Feature: Discover Tab
     And Validates "sign in" text
     Then User closes the app
 
-  Scenario: verify saved searches are displayed in "Just For Me" Section (TC-13140),(TC-13144),(TC-13147),(TC-13159)
+  Scenario: verify saved searches are displayed in "Just For Me" Section (TC-13140),(TC-13144),(TC-13147),(TC-13159) (TC-9338)
     And User enters city "Concord,CA" in search Bar
     And User clicks on "SigninTabFooter" option
     And Enters "signinemailid"
@@ -125,7 +125,7 @@ Feature: Discover Tab
     And Validate "New Listings" is not displayed
     Then User closes the app
 
-  Scenario: verify property recommendation section in discover tab (TC-13183),(TC-11434),(TC-11434)
+  Scenario: verify property recommendation section in discover tab (TC-13183),(TC-11434),(TC-11434) (TC-14646)
     And User enters city "Concorde,CA" in search Bar
     And User clicks on "SigninTabFooter" option
     And Enters "signinemailid"
@@ -153,7 +153,7 @@ Feature: Discover Tab
     And Validate "Recommended Properties" is not displayed
     Then User closes the app
 
-  Scenario: Favouriting a property in recoommended section,should not display the favourited property(TC-13186 ),(TC-11431),(TC-11436 )
+  Scenario: Favouriting a property in recoommended section,should not display the favourited property(TC-13186 ),(TC-11431),(TC-11436 ),(TC-14659)
     And User enters city "Concorde,CA" in search Bar
     And User clicks on "SigninTabFooter" option
     And Enters "signinemailid"
@@ -203,7 +203,7 @@ Feature: Discover Tab
      And Validate "Favourited Property in Recently Viewed" is not displayed
      Then User closes the app
    
-    Scenario: Verify Open Houses for section in discover Tab 	(TC-14655)
+    Scenario: Verify Open Houses for section in discover Tab 	(TC-14655) (TC-14656)
      And User enters city "Concorde,CA" in search Bar
      And User clicks on "SigninTabFooter" option
      And Enters "signinemailid"
@@ -215,7 +215,7 @@ Feature: Discover Tab
      And Verify Open House Property details is shown
      Then User closes the app  
      
-    Scenario: Verify the change of index of property in RVP Section  (TC-9119)
+    Scenario: Verify the change of index of property in RVP Section  (TC-9119) 
      And User enters city "Concord,CA" in search Bar
      And User clicks on "SigninTabFooter" option
      And Enters "signinemailid"
@@ -266,3 +266,116 @@ Feature: Discover Tab
      And Confirm the same PDP is showing heart icon in discover tab
      Then User closes the app
      
+     
+	Scenario: Verify Recommended properties changed when logged in with different user (TC-11439)
+	 And User enters city "Atlanta,GA" in search Bar
+	 And User clicks on "SigninTabFooter" option
+     And Enters "signinemailid"
+     And Enters "SigninPassword"
+     And User clicks on "onboarding_SignInBtn" option
+     And Navigates to "Discover" Tab
+     And User scrolls to text "Open Houses Nearby"
+     And Check the address of the first property before sign out
+     And Validate Sign in button replaced by Me button
+     And User clicks on "SignOut" option
+     And Validate that user as successfully logged out
+     And User clicks on "SigninTabFooter" option
+     And Enters "signinemailid2"
+     And Enters "SigninPassword2"
+     And User clicks on "onboarding_SignInBtn" option
+     And Navigates to "Discover" Tab
+     And User scrolls to text "Open Houses Nearby"
+     And Check the address of the first property after signed in new account
+	 Then User closes the app
+	 
+	Scenario: Verify the new listings are for current search term  (TC-14651)
+	 And User enters city "Washington,DC" in search Bar
+	 And User verify the same search term in New Listings
+	 Then User closes the app
+	 
+	Scenario: Verify open houses are from current search rather than current saved search (TC-14661)
+	 And User enters city "Atlanta,GA" in search Bar
+	 And User clicks on "SigninTabFooter" option
+	 And Enters "signinemailid"
+     And Enters "SigninPassword"
+     And User clicks on "onboarding_SignInBtn" option
+     And click on "Save Search" option
+     And Navigates to "Discover" Tab
+     And User scrolls to text "Just for Me"
+     And Verify Open House Tag & Time are displayed
+     And Verify Open House Property details is shown
+     And User enters city "Concord,CA" in search Bar
+     And User verify the same search term in Open Houses
+	 Then User closes the app
+	 
+	Scenario: Verify no Recommended properties for guest user (TC-14645) (TC-14644)
+	 And User enters city "Concord,CA" in search Bar
+	 And Navigates to "Discover" Tab
+	 And Check for the Recommended Properties section
+	 And User clicks on "SigninTabFooter" option
+	 And Enters "signinemailid"
+	 And Enters "SigninPassword"
+	 And User clicks on "onboarding_SignInBtn" option
+	 And Check for the Recommended Properties section
+	 Then User closes the app
+	 
+	Scenario: Verify the updated RVP section when logged in from PDP (TC-8509)
+	 And User enters city "Concord,CA" in search Bar
+	 And User Clicks on any property to navigate to pdp page
+	 And User Sign in from Notes section
+	 And Enters "signinemailid"
+	 And Enters "SigninPassword"
+	 And User clicks on "onboarding_SignInBtn" option
+	 And User adds a comment and verifies if the comment is displayed in pdp page
+	 And Validate Property auto-favorited
+	 And Confirm the same PDP is showing heart icon in discover tab 
+	 
+	Scenario: Verify Most recent search & search my location is not present (TC-8833) (TC-8834) (TC-8835) (TC-8836)
+	 And User enters city "Atlanta,GA" in search Bar
+	 And Navigates to "Discover" Tab
+	 And Verify Most recent search and search my location is not present 
+	 And User clicks on "SigninTabFooter" option
+	 And Enters "signinemailid"
+     And Enters "SigninPassword"
+     And User clicks on "onboarding_SignInBtn" option
+     And Verify Most recent search and search my location is not present
+	 
+	Scenario: Verify the Just For Me section is updated with search but not filter search (TC-9340) (TC-9342)
+	 And User enters city "Atlanta,GA" in search Bar
+	 And Navigates to "Discover" Tab
+	 And User verfies the location in Just for me
+	 And Navigates to "Search" Tab
+	 And User enters city "94521,Concord,CA" in search Bar
+	 And User clicks on filters tab and enables open house filter
+	 And Navigates to "Discover" Tab
+	 And User verfies the location in Just for me
+	 
+	Scenario: Verify the change of index of property in RVP Section  (TC-9118) 
+     And User enters city "Concord,CA" in search Bar
+     And User clicks on "SigninTabFooter" option
+     And Enters "signinemailid"
+     And Enters "SigninPassword"
+     And User clicks on "onboarding_SignInBtn" option
+     And User Clicks on any property to navigate to pdp page
+     And Favourites a property in PDP page and verify favourited property in discover tab
+     And check if No saved listings are present
+     And Navigates to "Discover" Tab
+     Then User closes the app
+   
+   Scenario: Verify the order of all the tabs (TC-2983) (TC-2984) (TC-2985)
+     And User clicks on "SigninTabFooter" option
+     And Enters "signinemailid"
+     And Enters "SigninPassword"
+     And User clicks on "onboarding_SignInBtn" option
+     And User verify the order of the tabs
+     Then User closes the app
+     
+     
+     
+     
+   
+	 
+	 
+	 
+     
+    
