@@ -1,4 +1,4 @@
-#@Author:- Syed Zubair Mehdi
+#Discover Tab:-@Author:- Syed Zubair Mehdi
 @Regression
 Feature: Discover Tab
 
@@ -294,9 +294,9 @@ Feature: Discover Tab
 	 Then User closes the app
 	 
 	Scenario: Verify open houses are from current search rather than current saved search (TC-14661)
-	 And User enters city "Atlanta,GA" in search Bar
-	 And User clicks on "SigninTabFooter" option
-	 And Enters "signinemailid"
+	   And User enters city "Atlanta,GA" in search Bar
+	   And User clicks on "SigninTabFooter" option
+	   And Enters "signinemailid"
      And Enters "SigninPassword"
      And User clicks on "onboarding_SignInBtn" option
      And click on "Save Search" option
@@ -329,6 +329,8 @@ Feature: Discover Tab
 	 And User adds a comment and verifies if the comment is displayed in pdp page
 	 And Validate Property auto-favorited
 	 And Confirm the same PDP is showing heart icon in discover tab 
+	 Then User closes the app
+	 
 	 
 	Scenario: Verify Most recent search & search my location is not present (TC-8833) (TC-8834) (TC-8835) (TC-8836)
 	 And User enters city "Atlanta,GA" in search Bar
@@ -336,9 +338,11 @@ Feature: Discover Tab
 	 And Verify Most recent search and search my location is not present 
 	 And User clicks on "SigninTabFooter" option
 	 And Enters "signinemailid"
-     And Enters "SigninPassword"
-     And User clicks on "onboarding_SignInBtn" option
-     And Verify Most recent search and search my location is not present
+   And Enters "SigninPassword"
+   And User clicks on "onboarding_SignInBtn" option
+   And Verify Most recent search and search my location is not present
+   Then User closes the app
+   
 	 
 	Scenario: Verify the Just For Me section is updated with search but not filter search (TC-9340) (TC-9342)
 	 And User enters city "Atlanta,GA" in search Bar
@@ -349,8 +353,10 @@ Feature: Discover Tab
 	 And User clicks on filters tab and enables open house filter
 	 And Navigates to "Discover" Tab
 	 And User verfies the location in Just for me
+	 Then User closes the app
 	 
-	Scenario: Verify the change of index of property in RVP Section  (TC-9118) 
+	 
+	Scenario: Verify the change of index of property in RVP Section  (TC-9118) (TC-581)
      And User enters city "Concord,CA" in search Bar
      And User clicks on "SigninTabFooter" option
      And Enters "signinemailid"

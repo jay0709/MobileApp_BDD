@@ -1,4 +1,4 @@
-#PDP Feature - @Author jayabrata
+#Favourite Tab - @Author Syed Zubair Mehdi
 @Regression
 Feature: Favourite Tab
 
@@ -14,7 +14,7 @@ Feature: Favourite Tab
     And check if No saved listings are present
     Then User closes the app
 
-  Scenario: Adding , editing & deleting comment and verifying (TC-11222),(TC-11282),(TC-11280),(TC-11259),(TC-12630)
+  Scenario: Adding , editing & deleting comment and verifying (TC-11222),(TC-11282),(TC-11280),(TC-11259/QO-7646),(TC-12630/QO-7647)
     When User enters city "Concord,CA" in search Bar
     And  Verify user is logged in before save Listing
     And  Verify latest comment added with last comment displayed
@@ -23,7 +23,7 @@ Feature: Favourite Tab
     And check if No saved listings are present
     Then User closes the app
 
-  Scenario: Adds image from camera and then deletes the image(Asset) (TC-11221) (TC-11225),(TC-11236),(TC-12631)
+  Scenario: Adds image from camera and then deletes the image(Asset) (TC-11221) (TC-11225),(TC-11236),(TC-12631/QO-7648)
     When User enters city "Washington,DC" in search Bar
     And  Verify user is logged in before save Listing 
     And User Adds image from assest and verifys
@@ -41,7 +41,7 @@ Feature: Favourite Tab
     And check if No saved listings are present
     Then User closes the app
 
-   Scenario: verify image thumbnail in favourite tab from camera and Gallery(TC-12636),(TC-12637)
+   Scenario: verify image thumbnail in favourite tab from camera and Gallery(TC-12636/QO-7653),(TC-12637/QO-7654)
     When User enters city "Concord,CA" in search Bar
     And  Verify user is logged in before save Listing 
     And User Adds image from assest and verifys
@@ -87,7 +87,7 @@ Feature: Favourite Tab
     And check if No saved listings are present
     Then User closes the app
 
-  Scenario: verifyAssetInFavTab (TC-11225)(TC-11226)(TC-11228)
+  Scenario: verifyAssetInFavTab (TC-11225)(TC-11226)(TC-11228) (TC-517)
     And Add asset in favourite tab to view
     And check if No saved listings are present
     Then User closes the app

@@ -1,4 +1,4 @@
-#PDP Feature - @Author jayabrata
+#PDP2 Feature - @Author Syed Zubair Mehdi
 @Regression
 Feature: PDP 2 Feature
 
@@ -73,5 +73,16 @@ Feature: PDP 2 Feature
     And Validate "Make an offer" is not displayed
     And Validate "Ask a question" is not displayed
     And Click on contact seller option and validate terms and condition presence
-    Then User closes the app  
+    Then User closes the app 
+    
+   Scenario: Verify the Map button in PDP & its UI (TC-14452) (TC-14453) (TC-14454) (TC-14455) (TC-14457)
+    When User enters city "Palo Alto,CA" in search Bar
+    And User Clicks on any property to navigate to pdp page
+    And User clicks on "MapView" button
+    And Validate the Map button and its ui components
+    And User clicks on "MapView" button
+    And Verify the navigation to google maps
+    Then User closes the app
+    
+    
     
