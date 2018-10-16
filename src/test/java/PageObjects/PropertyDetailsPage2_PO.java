@@ -19,19 +19,18 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
+public class PropertyDetailsPage2_PO extends desiredCapabilities
+		implements PropertDetailsPage_OR, Registration_OR, FavouriteProperty_OR, OpenHouse_OR {
 
-
-public class PropertyDetailsPage2_PO extends desiredCapabilities implements PropertDetailsPage_OR , Registration_OR ,FavouriteProperty_OR,OpenHouse_OR {
-	
 	AppiumDriver<MobileElement> driver;
 	WebElement element;
 	WebDriverWait wait;
-	commonFunctions cf = new commonFunctions();	
+	commonFunctions cf = new commonFunctions();
 	String taxData = null;
 	String HOAData = null;
 	FavouriteProperty_PO fp = new FavouriteProperty_PO();
 	PropertyData prop = new PropertyData();
-	
+
 	public void toolTipDetailsInfo(AppiumDriver<MobileElement> driver) {
 		wait = new WebDriverWait(driver, 5);
 		driver.findElement(pdpSchoolExpand).click();
@@ -43,25 +42,27 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 				"School rating logic verified as: \n" + driver.findElement(pdpSchoolDialogueDescription).getText());
 		driver.findElement(pdpSchoolDialogueOK).click();
 	}
-	
+
 	public void topAssignedSchool(AppiumDriver<MobileElement> driver) {
 		driver.findElement(pdpSchoolExpand).click();
-        List<MobileElement> list = driver.findElements(pdpTopSchoolList);
+		List<MobileElement> list = driver.findElements(pdpTopSchoolList);
 		System.out.println("No of top assigned school is: " + list.size());
 		Assert.assertTrue("First school name is not displayed", driver.findElement(pdpSchoolName).isDisplayed());
 		Assert.assertTrue("First school details is not displayed", driver.findElement(pdpSchoolInfo).isDisplayed());
 		Assert.assertTrue("First school Rating is not displayed", driver.findElement(pdpSchoolRating).isDisplayed());
-		Assert.assertTrue("First school Info Grade is not displayed", driver.findElement(pdpSchoolInfoGrade).isDisplayed());
-		Assert.assertTrue("First school Info Distance is not displayed", driver.findElement(pdpSchoolInfoDistance).isDisplayed());
-		Assert.assertTrue("First school Data Source is not displayed", driver.findElement(pdpSchoolDataSource).isDisplayed());
+		Assert.assertTrue("First school Info Grade is not displayed",
+				driver.findElement(pdpSchoolInfoGrade).isDisplayed());
+		Assert.assertTrue("First school Info Distance is not displayed",
+				driver.findElement(pdpSchoolInfoDistance).isDisplayed());
+		Assert.assertTrue("First school Data Source is not displayed",
+				driver.findElement(pdpSchoolDataSource).isDisplayed());
 
 	}
-	
-	public void viewAllSchools(AppiumDriver<MobileElement> driver)
-			throws MalformedURLException, InterruptedException {
+
+	public void viewAllSchools(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
 		wait = new WebDriverWait(driver, 5);
 		driver.findElement(pdpSchoolExpand).click();
-        driver.findElement(pdpViewAllSchools).click();
+		driver.findElement(pdpViewAllSchools).click();
 		System.out.println("Clicked on the View all schools..!");
 		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpSchooDeatilslListHeader));
 		Assert.assertEquals(driver.findElement(pdpSchooDeatilslListHeader).getText(), "School Information");
@@ -73,27 +74,35 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 		Assert.assertTrue("Random school 1 name is not displayed", driver.findElement(pdpSchoolName).isDisplayed());
 		Assert.assertTrue("Random school 1 details is not displayed", driver.findElement(pdpSchoolInfo).isDisplayed());
 		Assert.assertTrue("Random school 1 Rating is not displayed", driver.findElement(pdpSchoolRating).isDisplayed());
-		Assert.assertTrue("Random school 1 Info Grade is not displayed", driver.findElement(pdpSchoolInfoGrade).isDisplayed());
-		Assert.assertTrue("Random school 1 Info Distance is not displayed", driver.findElement(pdpSchoolInfoDistance).isDisplayed());
-		Assert.assertTrue("Random school 1 Data Source is not displayed", driver.findElement(pdpSchoolDataSource).isDisplayed());
+		Assert.assertTrue("Random school 1 Info Grade is not displayed",
+				driver.findElement(pdpSchoolInfoGrade).isDisplayed());
+		Assert.assertTrue("Random school 1 Info Distance is not displayed",
+				driver.findElement(pdpSchoolInfoDistance).isDisplayed());
+		Assert.assertTrue("Random school 1 Data Source is not displayed",
+				driver.findElement(pdpSchoolDataSource).isDisplayed());
 		try {
 			cf.scrollToText("1234567890", driver);
 		} catch (Exception ex) {
 			Assert.assertTrue("Random school 2 name is not displayed", driver.findElement(pdpSchoolName).isDisplayed());
-			Assert.assertTrue("Random school 2 details is not displayed", driver.findElement(pdpSchoolInfo).isDisplayed());
-			Assert.assertTrue("Random school 2 Rating is not displayed", driver.findElement(pdpSchoolRating).isDisplayed());
-			Assert.assertTrue("Random school 2 Info Grade is not displayed", driver.findElement(pdpSchoolInfoGrade).isDisplayed());
-			Assert.assertTrue("Random school 2 Info Distance is not displayed", driver.findElement(pdpSchoolInfoDistance).isDisplayed());
-			Assert.assertTrue("Random school 2 Data Source is not displayed", driver.findElement(pdpSchoolDataSource).isDisplayed());
+			Assert.assertTrue("Random school 2 details is not displayed",
+					driver.findElement(pdpSchoolInfo).isDisplayed());
+			Assert.assertTrue("Random school 2 Rating is not displayed",
+					driver.findElement(pdpSchoolRating).isDisplayed());
+			Assert.assertTrue("Random school 2 Info Grade is not displayed",
+					driver.findElement(pdpSchoolInfoGrade).isDisplayed());
+			Assert.assertTrue("Random school 2 Info Distance is not displayed",
+					driver.findElement(pdpSchoolInfoDistance).isDisplayed());
+			Assert.assertTrue("Random school 2 Data Source is not displayed",
+					driver.findElement(pdpSchoolDataSource).isDisplayed());
 
 			System.out.println("School Scroll complete..!!");
 		}
 		driver.findElement(pdpSchoolListBackButton).click();
 	}
-	
+
 	public void viewSchoolSourceNavigatation(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		driver.findElement(pdpSchoolExpand).click();
-        String dataSource = driver.findElement(pdpSchoolDataSource).getText();
+		String dataSource = driver.findElement(pdpSchoolDataSource).getText();
 		System.out.println(dataSource);
 		driver.findElement(pdpSchoolDataSource).click();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -106,18 +115,16 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 			URL = driver.findElement(chromeURLBar).getText();
 			System.out.println("URL is: " + URL);
 		}
-		try
-		{
+		try {
 			String expectedURL = "https://www.greatschools.org";
 			Assert.assertEquals(expectedURL, URL, "Browser not opened for Greatschool.org");
 
-		}
-		catch(AssertionError e)
-		{
+		} catch (AssertionError e) {
 			e.printStackTrace();
 			System.out.println("Assertion failure");
 		}
-    }
+	}
+
 	public void checkEMPvalue(AppiumDriver<MobileElement> driver) throws InterruptedException, MalformedURLException {
 		wait = new WebDriverWait(driver, 5);
 		try {
@@ -144,9 +151,8 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 			System.out.println("EMP Message box closed..!!");
 		}
 	}
-	
-	public void checkEMPBreakUp(AppiumDriver<MobileElement> driver)
-			throws MalformedURLException, InterruptedException {
+
+	public void checkEMPBreakUp(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
 		int taxValue = 0;
 		int HOAValue = 0;
 
@@ -198,7 +204,7 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 			checkTaxValueBreakup(driver, taxValue);
 
 	}
-	
+
 	public void checkTaxValueBreakup(AppiumDriver<MobileElement> driver, int taxValue)
 			throws MalformedURLException, InterruptedException {
 
@@ -210,43 +216,37 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 		int perMonthTaxAmount = (int) pdpTaxValue / 12;
 		System.out.println("Per year tax amount is: $" + pdpTaxValue);
 		System.out.println("Per month tax amount is: $" + perMonthTaxAmount);
-		Assert.assertEquals( "Per month tax data does not match..!!",taxValue, perMonthTaxAmount);
+		Assert.assertEquals("Per month tax data does not match..!!", taxValue, perMonthTaxAmount);
 		System.out.println("Per month tax data matched with Tax history data..!!");
 	}
-	
+
 	public void addTextInPDP(AppiumDriver<MobileElement> driver, String textToEnter) throws InterruptedException {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		Thread.sleep(2000);
-		try
-		{
+		try {
 			cf.scrollToText("Notes", driver);
 			System.out.println(" its at Notes section");
 
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("Already its at Notes section");
 		}
 		driver.findElement(editTextField).click();
 		fp.confirmDisclaimer(driver);
 		driver.findElement(editTextField).sendKeys(textToEnter);
 		driver.hideKeyboard();
-        String[] chars = driver.findElement(remainingChars).getText().split("/");
+		String[] chars = driver.findElement(remainingChars).getText().split("/");
 		String maxLimit = chars[1];
 		System.out.println("Max limit of enetering characters: " + maxLimit);
 		System.out.println("Total characters entered: " + chars[0]);
-		try
-		{
+		try {
 			cf.scrollToText("Save", driver);
-            driver.findElement(saveAssetButton).isDisplayed();
-            driver.findElement(saveAssetButton).click();;
+			driver.findElement(saveAssetButton).isDisplayed();
+			driver.findElement(saveAssetButton).click();
+
+		} catch (Exception e) {
+			driver.findElement(saveAssetButton).click();
 
 		}
-		catch(Exception e)
-		{
-            driver.findElement(saveAssetButton).click();;
-
-        }		
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(sendTextProgressBar));
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(commentTextView));
@@ -255,7 +255,7 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 		}
 		System.out.println("Asset addition completed..");
 	}
-	
+
 	public void CommentVerificationinPDP(AppiumDriver<MobileElement> driver, String assetToAdd)
 			throws InterruptedException {
 		addTextInPDP(driver, assetToAdd);
@@ -278,85 +278,77 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 //			System.out.println("Assertion failed");
 //		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void MakeAnOfferFormValidation(AppiumDriver<MobileElement> driver) throws InterruptedException
-	{
+	public void MakeAnOfferFormValidation(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.textToBePresentInElement(MakeAnOffer, "Make an Offer"));
-        Assert.assertTrue( "Make an offer section not present",driver.findElement(MakeAnOffer).isDisplayed());
+		Assert.assertTrue("Make an offer section not present", driver.findElement(MakeAnOffer).isDisplayed());
 		Thread.sleep(3000);
-        WebElement element =driver.findElement(MakeAnOffer);
+		WebElement element = driver.findElement(MakeAnOffer);
 		element.click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(OfferFirstName));
 		String[] myStringArray;
-        myStringArray = new String[]{"Third","Coshopper","testleadzero@gmail.com"};
+		myStringArray = new String[] { "Third", "Coshopper", "testleadzero@gmail.com" };
 		String[] updatedFieldsArray = new String[3];
 		updatedFieldsArray[0] = driver.findElement(OfferFirstName).getText();
 		updatedFieldsArray[1] = driver.findElement(OfferLastName).getText();
 		updatedFieldsArray[2] = driver.findElement(OfferEmail).getText();
 		for (int i = 0; i < myStringArray.length; i++) {
-	        if (myStringArray[i].equalsIgnoreCase(updatedFieldsArray[i])) 
-	        {
-	           System.out.println("The fiels are equal at position"+myStringArray[i]);
-	        }
-	        else
-	        {
-		           System.out.println("The fiels are Not equal at position"+myStringArray[i]);
-            }
-	    }
+			if (myStringArray[i].equalsIgnoreCase(updatedFieldsArray[i])) {
+				System.out.println("The fiels are equal at position" + myStringArray[i]);
+			} else {
+				System.out.println("The fiels are Not equal at position" + myStringArray[i]);
+			}
+		}
 		driver.findElement(OfferPhone).clear();
-        driver.findElement(OfferPhone).sendKeys(prop.phoneNumber);
+		driver.findElement(OfferPhone).sendKeys(prop.phoneNumber);
 		driver.findElement(NextButton).click();
 		driver.findElement(OfferMoney).sendKeys("888");
 		driver.findElement(NextButton).click();
-        driver.findElement(AllCashOption).click();
+		driver.findElement(AllCashOption).click();
 		Assert.assertTrue(driver.findElement(AllCashOption).isEnabled());
-        for (int i=0; i<3;i++)
-		{
+		for (int i = 0; i < 3; i++) {
 			driver.findElement(BackButton).click();
-        }
+		}
 
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void AskAQuestionForm(AppiumDriver<MobileElement> driver)
-	
+
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.textToBePresentInElement(askQuestions, "Ask a Question"));
-        Assert.assertTrue("Make an offer section not present",driver.findElement(askQuestions).isDisplayed());
+		wait.until(ExpectedConditions.textToBePresentInElement(askQuestions, "Ask a Question"));
+		Assert.assertTrue("Make an offer section not present", driver.findElement(askQuestions).isDisplayed());
 		driver.findElement(askQuestions).click();
 		FieldValidation(driver);
-		Assert.assertTrue("Footer in Ask A Question is not displayed", driver.findElement(AskFooterDeatils).isDisplayed());
+		Assert.assertTrue("Footer in Ask A Question is not displayed",
+				driver.findElement(AskFooterDeatils).isDisplayed());
 	}
-	
-	public void FieldValidation(AppiumDriver<MobileElement> driver)
-	{
+
+	public void FieldValidation(AppiumDriver<MobileElement> driver) {
 		String[] myStringArray;
-        myStringArray = new String[]{"Third","Coshopper","testleadzero@gmail.com"};
+		myStringArray = new String[] { "Third", "Coshopper", "testleadzero@gmail.com" };
 		String[] updatedFieldsArray = new String[3];
-		WebDriverWait wait = new WebDriverWait(driver,10);
+		WebDriverWait wait = new WebDriverWait(driver, 10);
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(AskFirstName));
 
 		updatedFieldsArray[0] = driver.findElement(AskFirstName).getText();
 		updatedFieldsArray[1] = driver.findElement(AskLastName).getText();
-		driver.manage().timeouts().implicitlyWait(2,TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		updatedFieldsArray[2] = driver.findElement(AskEmail).getText();
-		
+
 		for (int i = 0; i < myStringArray.length; i++) {
-	        if (myStringArray[i].equalsIgnoreCase(updatedFieldsArray[i])) 
-	        {
-	           System.out.println("The fiels are equal at position"+myStringArray[i]);
-	        }
-	        else
-	        {
-		           System.out.println("The fiels are Not equal at position"+myStringArray[i]);
-            }
-	    }
+			if (myStringArray[i].equalsIgnoreCase(updatedFieldsArray[i])) {
+				System.out.println("The fiels are equal at position" + myStringArray[i]);
+			} else {
+				System.out.println("The fiels are Not equal at position" + myStringArray[i]);
+			}
+		}
 	}
-		
+
 	public void checkStateforSaveListingNotification(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		Thread.sleep(5000);
 		String status = driver.findElement(favoriteNotificationToggle).getText();
@@ -366,21 +358,67 @@ public class PropertyDetailsPage2_PO extends desiredCapabilities implements Prop
 			Assert.assertEquals("OFF", statusCheck, "Save listing Notification is not turned off..");
 		}
 	}
-	
-	public void checkPropertyIsFavorited(AppiumDriver<MobileElement> driver) throws Throwable{
+
+	public void checkPropertyIsFavorited(AppiumDriver<MobileElement> driver) throws Throwable {
 		if (driver.findElement(favIconInPDP).isSelected()) {
-			cf.verticalScrollDownwrds(driver);
-			cf.verticalScrollDownwrds(driver);
-			cf.verticalScrollDownwrds(driver);
 			driver.findElement(favIconInPDP).click();
 		}
-		
+
 	}
-	
-	public void favPropertyfromPDP(AppiumDriver<MobileElement> driver) throws Throwable{
+
+	public void favPropertyfromPDP(AppiumDriver<MobileElement> driver) throws Throwable {
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(favIconInPDP));
 		driver.findElement(favIconInPDP).click();
 	}
-}
 
+	public void checkPropertyFavoritedOnly(AppiumDriver<MobileElement> driver) throws Throwable {
+		for (int i = 0; i < 3; i++)
+			cf.verticalScrollDownwrds(driver);
+		Boolean status = driver.findElement(favIconInPDP).isSelected();
+		Assert.assertEquals(true, status);
+	}
+
+	public void verifyTaxAmountRoundFigure(AppiumDriver<MobileElement> driver) throws Throwable {
+		cf.verticalScrollUpwards(driver);
+		String taxAmount = driver.findElement(empSectionTaxEditor).getText();
+		if (taxAmount.contains(".") == false)
+			Assert.assertTrue("The property tax value is round figure", true);
+		String taxSource = driver.findElement(empSource).getText();
+		Assert.assertEquals("The tax source name not matched..", "Source: County(Public) Records", taxSource);
+	}
+
+	public void verifyNoHOAinViewAll(AppiumDriver<MobileElement> driver) throws Throwable {
+		cf.scrollToText("VIEW ALL FEATURES AND DETAILS", driver);
+		driver.findElement(viewAllFeature).click();
+		try {
+			cf.scrollToText("HOA", driver);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+
+	}
+
+	public void verifyZeroHOADuesInViewAll(AppiumDriver<MobileElement> driver) throws Throwable {
+		cf.scrollToText("HOA Dues", driver);
+		String hoaValue = driver.findElement(empHOADues).getText();
+		cf.scrollToText("VIEW ALL FEATURES AND DETAILS", driver);
+		driver.findElement(viewAllFeature).click();
+		try {
+			cf.scrollToText(hoaValue, driver);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+
+	public void compareTextInEMPinfoAndEMPpage(AppiumDriver<MobileElement> driver) throws Throwable {
+		cf.scrollToText("30-Year Fixed, 3.86 % Interest", driver);
+		System.out.println("Duration & Interest rate options are verified..!!");
+		driver.findElement(empInfo).click();
+		String empToolTipMessage = "(" + driver.findElement(empInfoMessage).getText() + ")";
+		driver.findElement(empMessageClose).click();
+		driver.findElement(empCustomizeCalculator).click();
+		String empInfoMessage = driver.findElement(MortagageDisclaimer).getText();
+		Assert.assertEquals("Message does not match", empToolTipMessage, empInfoMessage);
+	}
+}

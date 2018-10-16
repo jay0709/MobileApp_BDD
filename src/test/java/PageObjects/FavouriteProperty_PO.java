@@ -19,30 +19,29 @@ import ObjectRepository.Registration_OR;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 
-
 /**
  * @author chakraja
  *
  */
-public class FavouriteProperty_PO extends desiredCapabilities implements FavouriteProperty_OR , Registration_OR{
+public class FavouriteProperty_PO extends desiredCapabilities implements FavouriteProperty_OR, Registration_OR {
 	WebElement element;
 	PropertyData pr = new PropertyData();
 	commonFunctions cf = new commonFunctions();
 	PropertDetailsPage_PO pdp = new PropertDetailsPage_PO();
 
 	public void favPropertyFromList(AppiumDriver<MobileElement> driver) throws InterruptedException {
-		Thread.sleep(3000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(favPropertyList));
 		driver.findElement(favPropertyList).click();
-		Thread.sleep(5000);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 	}
 
 	public String propertyAddressList(AppiumDriver<MobileElement> driver) {
 		pr.propertyAddressList = driver.findElement(listPropertyAddress).getText();
 		return pr.propertyAddressList;
 	}
-	
+
 	public void checkNoSavedListingsText(AppiumDriver<MobileElement> driver) throws InterruptedException {
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		driver.findElement(clickFavouriteTab).click();
 		try {
 			while (driver.findElement(favIcon).isEnabled()) {
@@ -57,14 +56,14 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 	}
 
-    public void verifyPorpertyDetailsFavourite(AppiumDriver<MobileElement> driver)
+	public void verifyPorpertyDetailsFavourite(AppiumDriver<MobileElement> driver)
 			throws InterruptedException, MalformedURLException {
 		pr.propertyPriceList = pdp.getProeprtyPriceFromList(driver);
 		pr.listBedBathSqft = pdp.getPropertyBedBathSqftList(driver);
 		pr.propertyAddressList = propertyAddressList(driver);
 		favPropertyFromList(driver);
 		driver.findElement(clickFavouriteTab).click();
-		Thread.sleep(5000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(favPropertyPrice));
 		pr.propertyPriceFav = driver.findElement(favPropertyPrice).getText();
 		Assert.assertEquals(pr.propertyPriceList, pr.propertyPriceFav, "Price doesn't match..!");
 		pr.porpertyAddressFav = driver.findElement(favPropertyAddress).getText();
@@ -78,6 +77,7 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 		driver.findElement(By.id("com.owners.buyer:id/fav_button")).click();
 
 	}
+
 	public void verifyLoginBeforeSaveListing(AppiumDriver<MobileElement> driver) {
 		driver.findElement(favPropertyList).click();
 		WebDriverWait wait = new WebDriverWait(driver, 5);
@@ -112,27 +112,26 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 			System.out.println("No co-shop alert is visible..!");
 		}
 	}
-	
+
 	public void confirmDisclaimer(AppiumDriver<MobileElement> driver) {
 		WebDriverWait wait = new WebDriverWait(driver, 5);
-		
+
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(confirmDisclaimerFirstTime));
 			System.out.println("Disclaimer page is shown..!");
-			System.out
-					.println(driver.findElement(privateNoteDescription).getText() + " : Description Text verified");
+			System.out.println(driver.findElement(privateNoteDescription).getText() + " : Description Text verified");
 			driver.findElement(disclaimerAcceptButton).click();
 			System.out.println("OK Button clicked -> Navigated to Fav tab.");
 		} catch (Exception e) {
 			System.out.println("Disclaimer page is not opened as user navigated to this page earlier as well..!");
 		}
-
+		driver.findElement(editTextField).click();
 	}
-	
+
 	public void addTextInFavTab(AppiumDriver<MobileElement> driver, String textToEnter) throws InterruptedException {
 		driver.findElement(clickFavouriteTab).click();
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		//Thread.sleep(2000);
+		// Thread.sleep(2000);
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		driver.findElement(editTextField).click();
 		confirmDisclaimer(driver);
@@ -151,18 +150,17 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 		}
 		System.out.println("Asset addition completed..");
 	}
-	
-	public void latestCommentVerify(AppiumDriver<MobileElement> driver, String assetToAdd)
-			throws InterruptedException {
+
+	public void latestCommentVerify(AppiumDriver<MobileElement> driver, String assetToAdd) throws InterruptedException {
 		addTextInFavTab(driver, assetToAdd);
-		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(commentAuthorInitials));
 		System.out.println("Asset author initials are: " + driver.findElement(commentAuthorInitials).getText());
 		String lastComment = driver.findElement(commentTextView).getText().trim().substring(12);
 		System.out.println(
 				"Asset added time is: " + driver.findElement(commentTextView).getText().trim().substring(4, 10));
 		Assert.assertEquals(assetToAdd.trim(), lastComment.trim(), "Last comment does not match with the commet added");
 	}
-	
+
 	public void swipePhotosInFavourite(AppiumDriver<MobileElement> driver) throws InterruptedException {
 //		int xcoOrdinate = driver.findElement(imageContainerInFav).getCenter().getX();
 //		int ycoOrdinate = driver.findElement(imageContainerInFav).getCenter().getY();
@@ -170,9 +168,11 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 //		int length = size.getWidth();
 //		int xcoOrdinateStart = xcoOrdinate + length / 4;
 //		int xcoOrdinateEnd = xcoOrdinate - length / 4;
-		
-		//new TouchAction(driver).press(PointOption.point(499, 647)).waitAction().moveTo(PointOption.point(158, 565)).release().perform();
-        //new TouchAction(driver).longPress(PointOption.point(499, 647)).waitAction().moveTo(PointOption.point(158, 565)).release().perform();
+
+		// new TouchAction(driver).press(PointOption.point(499,
+		// 647)).waitAction().moveTo(PointOption.point(158, 565)).release().perform();
+		// new TouchAction(driver).longPress(PointOption.point(499,
+		// 647)).waitAction().moveTo(PointOption.point(158, 565)).release().perform();
 //		double percentage = 20 ;
 //        Dimension size = driver.manage().window().getSize();
 //        int height = size.getHeight();
@@ -184,9 +184,9 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 
 		cf.horizontalswipetowardsright(driver, 0.20);
 	}
-	
+
 	public void countImagesWhileSwipe(AppiumDriver<MobileElement> driver) throws InterruptedException {
-	
+
 		swipePhotosInFavourite(driver);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(imageConatinerPhotoCount));
 		String currentImageNo = driver.findElement(imageConatinerPhotoCount).getText().split("/")[0];
@@ -194,17 +194,17 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 		if (Integer.parseInt(currentImageNo) > 1) {
 			System.out.println("Image swiped to image :" + Integer.parseInt(currentImageNo));
 			System.out.println("Total Image count..: " + totalImageCount);
- 		    swipePhotosInFavourite(driver);
-		    Thread.sleep(3000);
-		    swipePhotosInFavourite(driver);
-		    Thread.sleep(3000);
-            swipePhotosInFavourite(driver);
+			swipePhotosInFavourite(driver);
+			driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+			swipePhotosInFavourite(driver);
+			driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+			swipePhotosInFavourite(driver);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(favPropertyAddress));
 		} else
 			System.out.println("Single image is available in the property.");
 
 	}
-	
+
 	public void favPropertyFromMap(AppiumDriver<MobileElement> driver) throws InterruptedException {
 
 		wait = new WebDriverWait(driver, 20);
@@ -218,7 +218,7 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 		wait.until(ExpectedConditions.elementSelectionStateToBe(favIconInQuickSRP, true));
 		if (driver.findElement(favIconInQuickSRP).isSelected()) {
 			System.out.println("Property has been favorited from Quick SRP..!");
-			Thread.sleep(5000);
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			driver.findElement(clickFavouriteTab).click();
 			Assert.assertEquals(qPrice, driver.findElement(favPropertyPrice).getText(),
 					"Property Price not matching..!");
@@ -232,34 +232,31 @@ public class FavouriteProperty_PO extends desiredCapabilities implements Favouri
 		}
 
 	}
-	public void addDeleteMultilineNotes(AppiumDriver<MobileElement> driver) throws InterruptedException, MalformedURLException {
-	
+
+	public void addDeleteMultilineNotes(AppiumDriver<MobileElement> driver)
+			throws InterruptedException, MalformedURLException {
+
 		WebDriverWait wait = new WebDriverWait(driver, 20);
-		try
-		{
+		try {
 			cf.scrollToText("Notes", driver);
 			System.out.println(" its at Notes section");
 
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("Already its at Notes section");
 		}
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        driver.findElement(editTextField).click();
+		driver.findElement(editTextField).click();
 		confirmDisclaimer(driver);
-		driver.findElement(editTextField).sendKeys("In Word 2013 or Word 2010, on the Review tab, in the Tracking group, in the Show Markup list, choose.");
+		driver.findElement(editTextField).sendKeys(
+				"In Word 2013 or Word 2010, on the Review tab, in the Tracking group, in the Show Markup list, choose.");
 		driver.hideKeyboard();
-        Thread.sleep(2000);
-        try
-		{
-            driver.findElement(saveAssetButton).isDisplayed();
-            driver.findElement(saveAssetButton).click();
+		Thread.sleep(2000);
+		try {
+			driver.findElement(saveAssetButton).isDisplayed();
+			driver.findElement(saveAssetButton).click();
 
-		}
-		catch(Exception e)
-		{
-            driver.findElement(saveAssetButton).click();
+		} catch (Exception e) {
+			driver.findElement(saveAssetButton).click();
 
 		}
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(sendTextProgressBar));

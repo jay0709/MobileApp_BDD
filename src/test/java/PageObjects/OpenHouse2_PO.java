@@ -10,51 +10,50 @@ import org.testng.Assert;
 import Driver.PropertyData;
 import Driver.desiredCapabilities;
 import ObjectRepository.CommonFunctions_OR;
+import ObjectRepository.FavouriteProperty_OR;
 import ObjectRepository.OpenHouse_OR;
 import ObjectRepository.Registration_OR;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 
-public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,Registration_OR,CommonFunctions_OR{
+public class OpenHouse2_PO extends desiredCapabilities
+		implements OpenHouse_OR, Registration_OR, CommonFunctions_OR, FavouriteProperty_OR {
 	AppiumDriver<MobileElement> driver;
 	WebElement element;
-	WebDriverWait wait;
 	commonFunctions cf = new commonFunctions();
 	PropertyData pr = new PropertyData();
 	OpenHouse_PO opn = new OpenHouse_PO();
 	DiscoverTab_PO dp = new DiscoverTab_PO();
 
 	public void discovertabopenhouses(AppiumDriver<MobileElement> driver)
-			throws MalformedURLException, InterruptedException
-	{
-		         wait = new WebDriverWait(driver, 20);
+			throws MalformedURLException, InterruptedException {
+		wait = new WebDriverWait(driver, 20);
 
-		         // Delete all saved search & Save a new one
-				cf.deleteAllSAvedSearch(driver);
-				cf.searchMapSRP(pr.searchName, driver);
-				cf.clearAllFilters(driver);
-				cf.saveSearch(driver);
+		// Delete all saved search & Save a new one
+		cf.deleteAllSAvedSearch(driver);
+		cf.searchMapSRP(pr.searchName, driver);
+		cf.clearAllFilters(driver);
+		cf.saveSearch(driver);
 
-				// Getting search name from search Bar
-				pr.searchName = driver.findElement(searchBarSRP).getText();
+		// Getting search name from search Bar
+		pr.searchName = driver.findElement(searchBarSRP).getText();
 
-				// navigation to Discover tab
-				wait.until(ExpectedConditions.presenceOfElementLocated(navigatingDiscoverTab));
-				driver.findElement(navigatingDiscoverTab).click();
+		// navigation to Discover tab
+		wait.until(ExpectedConditions.presenceOfElementLocated(navigatingDiscoverTab));
+		driver.findElement(navigatingDiscoverTab).click();
 
-				// Verifying the Open houses section with items
-				try {
-					cf.scrollToText("Open Houses", driver);
-					cf.scrollToText("Advice", driver);
-					Assert.assertEquals(driver.findElement(openHouseItemAddressState).getText().split(",")[0],
-							pr.searchName.split(",")[0], "Location of the Open houses does not macth with Saved search Locaiton");
-					System.out.println("Open houses are visible for the Recent Saved Search..!");
-				} catch (Exception e) {
-					System.out.println("No Open house found for the Recent Saved search");
-				}
+		// Verifying the Open houses section with items
+		try {
+			cf.scrollToText("Open Houses", driver);
+			cf.scrollToText("Advice", driver);
+			Assert.assertEquals(driver.findElement(openHouseItemAddressState).getText().split(",")[0],
+					pr.searchName.split(",")[0],
+					"Location of the Open houses does not macth with Saved search Locaiton");
+			System.out.println("Open houses are visible for the Recent Saved Search..!");
+		} catch (Exception e) {
+			System.out.println("No Open house found for the Recent Saved search");
+		}
 	}
-
-
 
 	public void totalOpenHouseInMenu(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
@@ -93,8 +92,8 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 			throws MalformedURLException, InterruptedException {
 
 		// Delete all saved search & Save a new one
-		//cf.deleteAllSAvedSearch(driver);
-		
+		// cf.deleteAllSAvedSearch(driver);
+
 		cf.saveSearch(driver);
 
 		// Checking the status of the saved search.
@@ -131,8 +130,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 
 	}
 
-	public void matchDataInPDP(AppiumDriver<MobileElement> driver)
-			throws MalformedURLException, InterruptedException {
+	public void matchDataInPDP(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
 		String addressDiscover[] = driver.findElement(openHouseItemAddress).getText().split(" ");
 		String srpDate = driver.findElement(openTimeDiscoverTile).getText().toLowerCase();
 		String[] dateSRP = srpDate.split(",");
@@ -155,7 +153,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 		cf.saveSearch(driver);
 
 		// navigation to Discover tab
-        dp.navigateDiscoverTab(driver);
+		dp.navigateDiscoverTab(driver);
 
 		// Verifying the Open houses section with items
 		try {
@@ -186,8 +184,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 		}
 	}
 
-	public void favOpenHousePDP(AppiumDriver<MobileElement> driver)
-			throws MalformedURLException, InterruptedException {
+	public void favOpenHousePDP(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
 		driver.findElement(favIconPDP).click();
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(favToast));
@@ -195,8 +192,8 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 		driver.findElement(pdpBackButton).click();
 		Thread.sleep(2000);
 		dp.navigateDiscoverTab(driver);
-		
-		//cf.scrollToText("Advice", driver);
+
+		// cf.scrollToText("Advice", driver);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(heartIcon));
 		if (driver.findElement(heartIcon).isEnabled())
 			System.out.println("Heart Icon Present in the discover tab tiles..!");
@@ -205,8 +202,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 
 	}
 
-	public void unFavOpenHouse(AppiumDriver<MobileElement> driver)
-			throws MalformedURLException, InterruptedException {
+	public void unFavOpenHouse(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
 		driver.findElement(navigateFavouriteTab).click();
 		Thread.sleep(4000);
 		driver.findElement(favButtonInFav).click();
@@ -224,7 +220,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 	public void openHouseAfterChangeSavedSearch(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
 		String addressDiscoverAfter = null;
-		//driver.findElement(navigatingDiscoverTab).click();
+		// driver.findElement(navigatingDiscoverTab).click();
 		cf.scrollToText("Advice", driver);
 		String addressDiscoverBefore = driver.findElement(openHouseItemAddress).getText();
 		cf.editSavedSearchTab(driver);
@@ -232,7 +228,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 		driver.findElement(navigatingDiscoverTab).click();
 		cf.scrollToText("Advice", driver);
 		try {
-			  addressDiscoverAfter = driver.findElement(openHouseItemAddress).getText();
+			addressDiscoverAfter = driver.findElement(openHouseItemAddress).getText();
 		} catch (Exception e) {
 			System.out.println("No Open House available in the applied filter..!");
 			throw new RuntimeException();
@@ -245,7 +241,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 			System.out.println("Open house list has been updated..!");
 
 	}
-	
+
 	public void newTagInQuickSRP(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		cf.fromClusterToPinView(driver);
 		Thread.sleep(2000);
@@ -273,9 +269,8 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 		}
 
 	}
-	
+
 	public void newTagInListSRP(AppiumDriver<MobileElement> driver) throws InterruptedException {
-		Thread.sleep(2000);
 		try {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(newTagInSRPView));
 			System.out.println("New Tag Available in List View..!");
@@ -296,12 +291,12 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 				}
 			}
 		} catch (Exception e1) {
+			System.out.println(e1);
 			System.out.println("This property is onboarded beyond 7 Days..!");
 		}
 
 	}
 
-	
 	public void newPropertiesWithOpenHouse(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
 		Thread.sleep(5000);
@@ -319,7 +314,7 @@ public class OpenHouse2_PO extends desiredCapabilities implements OpenHouse_OR,R
 
 		}
 	}
-	
+
 //public void myOpenHouseInNoNetwork(AppiumDriver<MobileElement> driver) throws InterruptedException {
 //		try
 //		{

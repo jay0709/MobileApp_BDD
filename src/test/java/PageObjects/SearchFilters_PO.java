@@ -11,14 +11,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Driver.PropertyData;
 import Driver.desiredCapabilities;
+import ObjectRepository.CommonFunctions_OR;
+import ObjectRepository.PropertDetailsPage_OR;
 import ObjectRepository.SearchFilters_OR;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
+
 /**
  * @author chakraja
  *
  */
-public class SearchFilters_PO extends desiredCapabilities implements SearchFilters_OR {
+public class SearchFilters_PO extends desiredCapabilities
+		implements SearchFilters_OR, PropertDetailsPage_OR, CommonFunctions_OR {
 	AppiumDriver<MobileElement> driver;
 	WebElement element;
 	WebDriverWait wait;
@@ -31,13 +35,13 @@ public class SearchFilters_PO extends desiredCapabilities implements SearchFilte
 		wait = new WebDriverWait(driver, 20);
 		driver.findElement(filtersTab).click();
 		wait.until(ExpectedConditions.elementToBeClickable(applyFilterButton));
-		driver.findElement(fiveBedFilter).click();
+		driver.findElement(fourBedFilter).click();
 		cf.scrollToText("Baths", driver);
-		//cf.verticalScrollUpwards(driver);
-        driver.findElement(fourBathFilter).click();
+		// cf.verticalScrollUpwards(driver);
+		driver.findElement(fourBathFilter).click();
 		cf.verticalScrollUpwards(driver);
 		driver.findElement(priceRangePicker).click();
-		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(secondWheelSelector));
 		for (int j = 0; j < 12; j++) {
 			driver.findElement(secondWheelSelector).click();
 		}
@@ -45,7 +49,7 @@ public class SearchFilters_PO extends desiredCapabilities implements SearchFilte
 			driver.findElement(firstWheelSelector).click();
 		}
 		driver.findElement(saveButton).click();
-		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(applyFilterButton));
 		driver.findElement(applyFilterButton).click();
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(cf.searchingDialouge));
 	}
@@ -73,7 +77,6 @@ public class SearchFilters_PO extends desiredCapabilities implements SearchFilte
 			throws MalformedURLException, InterruptedException {
 		wait = new WebDriverWait(driver, 20);
 		driver.findElement(listSRPTab).click();
-		Thread.sleep(2000);
 		cf.verticalScrollUpwards(driver);
 		wait.until(ExpectedConditions.presenceOfElementLocated(favIconList));
 		pr.propertyPriceList = driver.findElement(priceInList).getText();

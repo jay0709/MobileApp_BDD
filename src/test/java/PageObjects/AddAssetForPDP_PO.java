@@ -2,13 +2,11 @@ package PageObjects;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
 import Driver.PropertyData;
 import ObjectRepository.FavouriteProperty_OR;
 import ObjectRepository.OpenHouse_OR;
@@ -193,7 +191,7 @@ public class AddAssetForPDP_PO implements FavouriteProperty_OR , Registration_OR
 		{
 			driver.findElement(favToastMessage).isDisplayed();
 			elementpresent = true;
-			System.out.println("Favourite text element is still not invisible");
+			System.out.println("Favourite text element is still not invisible"+elementpresent);
 		}
 		catch(Exception e)
 		{

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package PageObjects;
 
 import java.io.IOException;
@@ -9,7 +6,6 @@ import java.net.MalformedURLException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import Driver.PropertyData;
@@ -18,26 +14,24 @@ import ObjectRepository.FavouriteProperty_OR;
 import ObjectRepository.PropertDetailsPage_OR;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
-
+import io.appium.java_client.android.AndroidDriver;
 
 /**
  * @author chakraja
  *
  */
-public class PropertDetailsPage_PO extends desiredCapabilities implements PropertDetailsPage_OR , FavouriteProperty_OR{
+public class PropertDetailsPage_PO extends desiredCapabilities implements PropertDetailsPage_OR, FavouriteProperty_OR {
 	WebElement element;
 	PropertyData pr = new PropertyData();
 	commonFunctions cf = new commonFunctions();
 
-	
 	public String getProeprtyPriceFromList(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
+		wait.until(ExpectedConditions.elementToBeClickable(listSRPTab));
 		driver.findElement(listSRPTab).click();
-		Thread.sleep(2000);
-		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.presenceOfElementLocated(favIconInList));
 		pr.propertyPriceList = driver.findElement(priceInList).getText();
-		System.out.println("property from List is"+ pr.propertyPriceList);
+		System.out.println("property price from List is: " + pr.propertyPriceList);
 		return pr.propertyPriceList;
 	}
 
@@ -49,7 +43,6 @@ public class PropertDetailsPage_PO extends desiredCapabilities implements Proper
 
 	public void validatePropertyDetails(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
-		wait = new WebDriverWait(driver, 20);
 		pr.propertyPriceList = getProeprtyPriceFromList(driver);
 		pr.listBedBathSqft = getPropertyBedBathSqftList(driver);
 		driver.findElement(priceInList).click();
@@ -68,7 +61,7 @@ public class PropertDetailsPage_PO extends desiredCapabilities implements Proper
 	public void validateSchoolSection(AppiumDriver<MobileElement> driver) throws InterruptedException, IOException {
 		driver.findElement(expandSchoolInfo).click();
 		cf.scrollToText("VIEW ALL SCHOOLS", driver);
-		Thread.sleep(2000);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(viewAllSchools));
 		cf.takeScreenshot("School_info.jpg", driver);
 		Assert.assertEquals(driver.findElement(viewAllSchools).getText(), "VIEW ALL SCHOOLS",
 				"Schols section not Validated..!");
@@ -87,13 +80,10 @@ public class PropertDetailsPage_PO extends desiredCapabilities implements Proper
 		cf.scrollToText("VIEW ALL FEATURES", driver);
 		driver.findElement(viewAllFeature).click();
 		System.out.println("Property all feature is validated..!");
-		Thread.sleep(2000);
 		cf.takeScreenshot("All_Feature.jpg", driver);
-		Thread.sleep(4000);
-        //driver.findElement(backButton).click();
-        driver.navigate().back();
+		// driver.findElement(backButton).click();
+		driver.navigate().back();
 
-		
 	}
 
 	public void validateProertyTax(AppiumDriver<MobileElement> driver) {
@@ -121,22 +111,19 @@ public class PropertDetailsPage_PO extends desiredCapabilities implements Proper
 	}
 
 	public void validatePropertyType(AppiumDriver<MobileElement> driver) throws InterruptedException, IOException {
-		try
-		{
-		if (driver.findElement(tourRequest).getText().equals("Contact Seller")) {
-			System.out.println("This is a FSBO or Featured property..");
-		}
-		if (driver.findElement(tourRequest).getText().equals("Request a Tour")) {
-			System.out.println("This is a MLS property..");
-			cf.scrollToText("Make an Offer", driver);
-			System.out.println("Make an offer section validated..!");
-			cf.takeScreenshot("Other_deatils.jpg", driver);
-			cf.scrollToText("Similar Properties", driver);
-			System.out.println("Similar properties section validated..!");
-		}
-		}
-		catch(Exception e)
-		{
+		try {
+			if (driver.findElement(tourRequest).getText().equals("Contact Seller")) {
+				System.out.println("This is a FSBO or Featured property..");
+			}
+			if (driver.findElement(tourRequest).getText().equals("Request a Tour")) {
+				System.out.println("This is a MLS property..");
+				cf.scrollToText("Make an Offer", driver);
+				System.out.println("Make an offer section validated..!");
+				cf.takeScreenshot("Other_deatils.jpg", driver);
+				cf.scrollToText("Similar Properties", driver);
+				System.out.println("Similar properties section validated..!");
+			}
+		} catch (Exception e) {
 			System.out.println("No section present to be validated");
 		}
 
@@ -152,44 +139,95 @@ public class PropertDetailsPage_PO extends desiredCapabilities implements Proper
 			System.out.println("Other details not found..!");
 		}
 	}
-	
-	public void CheckMandatoryFieldsinRequestTourForm(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException 
-	{
+
+	public void CheckMandatoryFieldsinRequestTourForm(AppiumDriver<MobileElement> driver)
+			throws MalformedURLException, InterruptedException {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(FirstNameErrorText));
-		Assert.assertTrue(driver.findElement(FirstNameErrorText).isDisplayed(), "First Name is not mandatory in request tour form");
-		Assert.assertTrue(driver.findElement(LastNameErrorText).isDisplayed(), "Last Name is not mandatory in request tour form");
-		Assert.assertTrue(driver.findElement(EmailErrorText).isDisplayed(), "Email is not mandatory in request tour form");
+		Assert.assertTrue(driver.findElement(FirstNameErrorText).isDisplayed(),
+				"First Name is not mandatory in request tour form");
+		Assert.assertTrue(driver.findElement(LastNameErrorText).isDisplayed(),
+				"Last Name is not mandatory in request tour form");
+		Assert.assertTrue(driver.findElement(EmailErrorText).isDisplayed(),
+				"Email is not mandatory in request tour form");
 		cf.verticalScrollUpwards(driver);
-		Assert.assertTrue(driver.findElement(PhoneErrorText).isDisplayed(), "Phone is not mandatory in request tour form");
+		Assert.assertTrue(driver.findElement(PhoneErrorText).isDisplayed(),
+				"Phone is not mandatory in request tour form");
 
 	}
-	
-	public void selectDate(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException  
-	{
-		cf.verticalScrollUpwards(driver);
+
+	public void selectDate(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
+		// cf.verticalScrollUpwards(driver);
 		wait.until(ExpectedConditions.elementToBeClickable(priceInList));
 		driver.findElement(priceInList).click();
-	    wait.until(ExpectedConditions.presenceOfElementLocated(priceInPDP));
+		wait.until(ExpectedConditions.presenceOfElementLocated(priceInPDP));
 		wait.until(ExpectedConditions.elementToBeClickable(DayTile));
 		driver.findElement(DayTile).click();
 	}
-	
-	public void InputTime(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException  
-	{
+
+	public void InputTime(AppiumDriver<MobileElement> driver) throws MalformedURLException, InterruptedException {
 		driver.findElement(InputTime).click();
 		driver.findElement(SelectTime).click();
 		driver.findElement(favButtonInAlert).click();
 	}
-	
-	public void EditableOrNotEditable(By FieldLocator)
-	{
+
+	public void EditableOrNotEditable(By FieldLocator) {
 		String BeforeEditingText = driver.findElement(FieldLocator).getText();
 		driver.findElement(FieldLocator).sendKeys("Am i editable");
 		String AfterEditingText = driver.findElement(FieldLocator).getText();
-		Assert.assertEquals(BeforeEditingText, AfterEditingText,"Field is editable");
-		
+		Assert.assertEquals(BeforeEditingText, AfterEditingText, "Field is editable");
 
 	}
 
-	
+	public void checkPdpMapUiComponents(AppiumDriver<MobileElement> driver) throws Throwable {
+
+		driver.findElement(pdpMapIcon).click();
+		String address = driver.findElement(propertyDetail).getText();
+		String mapViewAddress = driver.findElement(pdpMapViewAddress).getText();
+		mapViewAddress = mapViewAddress.substring(0, mapViewAddress.indexOf(","));
+		if (address.contains(mapViewAddress))
+			Assert.assertTrue(true, mapViewAddress);
+		if (driver.findElement(pdpMapLoaded).isEnabled() == true)
+			Assert.assertTrue(true, mapViewAddress);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(sateliteButton));
+		driver.findElement(sateliteButton).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(streetViewButton));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(getDirectionButton));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pinInMapView));
+		driver.findElement(pinInMapView).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(pdpMapIcon));
+
+	}
+
+	public void navigatingToGoogleMaps(AppiumDriver<MobileElement> driver) {
+		driver.findElement(streetViewButton).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(mapContainer));
+		String streetActivity = ((AndroidDriver<MobileElement>) driver).currentActivity();
+		Assert.assertEquals(streetActivity, "com.google.android.maps.MapsActivity", "Not navigated to Google Maps");
+		driver.findElement(streetViewBackButton).click();
+		driver.navigate().back();
+		driver.findElement(getDirectionButton).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(mapContainer));
+		String mapsActivity = ((AndroidDriver<MobileElement>) driver).currentActivity();
+		Assert.assertEquals(mapsActivity, "com.google.android.maps.MapsActivity", "Not navigated to Google Maps");
+		driver.findElement(getDirectionBackButton).click();
+		driver.navigate().back();
+	}
+
+	public void validateGetDirectionCTA(AppiumDriver<MobileElement> driver) {
+		Assert.assertEquals(driver.findElement(pdpGetDirectionText).getText(), "Get Directions",
+				"Get direction text not verified");
+		String getDirecionAddress = driver.findElement(pdpGetDirectionAddress).getText();
+		String pdpHeaderSectionAddress = driver.findElement(pdpHeaderAddress).getText();
+		Assert.assertEquals(getDirecionAddress, pdpHeaderSectionAddress,
+				"Get Direction address is not matched with PDP Address..!");
+		driver.findElement(pdpGetDirectionAddress).click();
+		System.out.println("Get direction clicked..");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(mapContainer));
+		String mapsActivity = ((AndroidDriver<MobileElement>) driver).currentActivity();
+		System.out.println(mapsActivity);
+		Assert.assertEquals(mapsActivity, "com.google.android.maps.MapsActivity", "Not navigated to Google Maps");
+		driver.navigate().back();
+
+	}
+
 }

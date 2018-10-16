@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -25,9 +24,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-//import org.testng.Assert;
 import org.testng.Assert;
-
 import Driver.PropertyData;
 import Driver.desiredCapabilities;
 import ObjectRepository.CommonFunctions_OR;
@@ -37,17 +34,19 @@ import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
+
 /**
- * @author jayabrata
+ * @author isaacindeevervemula
  *
  */
-public class commonFunctions extends desiredCapabilities implements CommonFunctions_OR{
+public class commonFunctions extends desiredCapabilities implements CommonFunctions_OR {
 	PropertyData prop = new PropertyData();
 	DiscoverTab_PO dt = new DiscoverTab_PO();
 
 	void startAppium() {
 
 	}
+
 	void stopAppium() {
 
 	}
@@ -79,52 +78,67 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 		return splitValue;
 
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public void scrollToText(String text, AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
 		Thread.sleep(4000);
-		
-		if(prop.platformName.equalsIgnoreCase("Android"))
-		{
-			 ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
-						"new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""
-								+ text + "\").instance(0))");
-			 
-	    }
-		else
-		{
+
+		if (prop.platformName.equalsIgnoreCase("Android")) {
+			((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
+					"new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""
+							+ text + "\").instance(0))");
+
+		} else {
 			// scroll to item in ios
-	        JavascriptExecutor js = (JavascriptExecutor) driver;
-	        HashMap scrollObject = new HashMap<>();
-	        scrollObject.put("predicateString", "value == '" + text + "'");
-	        scrollObject.put("direction", "down");
-            js.executeScript("mobile: scroll", scrollObject);
-			
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			@SuppressWarnings("rawtypes")
+			HashMap scrollObject = new HashMap<>();
+			scrollObject.put("predicateString", "value == '" + text + "'");
+			scrollObject.put("direction", "down");
+			js.executeScript("mobile: scroll", scrollObject);
+
 		}
-			
-     }
-	
-	 public void horizontalswipetowardsright(AppiumDriver<MobileElement> driver,double percentage)
-	   {
-		     //double percentage = 20 ;
-	        Dimension size = driver.manage().window().getSize();
-	        int height = size.getHeight();
-			int width= size.getWidth();
-			int y=(int)(height * percentage);
-			int startx=(int)(width * 0.75);
-			int endx=(int)(width * 0.20);
-			new TouchAction(driver).longPress(PointOption.point(startx, y)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(100))).moveTo(PointOption.point(endx,y)).release().perform();
-	   }
-	   
-	
-   public void verticalScrollUpwards(AppiumDriver<MobileElement> driver)
+
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void horizontalswipetowardsright(AppiumDriver<MobileElement> driver, double percentage) {
+		// double percentage = 20 ;
+		Dimension size = driver.manage().window().getSize();
+		int height = size.getHeight();
+		int width = size.getWidth();
+		int y = (int) (height * percentage);
+		int startx = (int) (width * 0.20);
+		int endx = (int) (width * 0.75);
+		new TouchAction(driver).longPress(PointOption.point(startx, y))
+				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(100))).moveTo(PointOption.point(endx, y))
+				.release().perform();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void horizontalSwipeTowardslLeft(AppiumDriver<MobileElement> driver, double percentage) {
+		Dimension size = driver.manage().window().getSize();
+		int height = size.getHeight();
+		int width = size.getWidth();
+		int y = (int) (height * percentage);
+		int startx = (int) (width * 0.75);
+		int endx = (int) (width * 0.20);
+		new TouchAction(driver).longPress(PointOption.point(startx, y))
+				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(100))).moveTo(PointOption.point(endx, y))
+				.release().perform();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void verticalScrollUpwards(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
 		Dimension size;
 		size = driver.manage().window().getSize();
 		int xCoOrdinate = (int) (size.width * 0.5);
 		int startY = (int) (size.height * 0.78);
 		int endY = (int) (size.height * 0.30);
-		new TouchAction(driver).press(PointOption.point(xCoOrdinate, startY)).waitAction().moveTo(PointOption.point(xCoOrdinate, endY)).release().perform();
+		new TouchAction(driver).press(PointOption.point(xCoOrdinate, startY)).waitAction()
+				.moveTo(PointOption.point(xCoOrdinate, endY)).release().perform();
 	}
 
 	public void verticalScrollDownwrds(AppiumDriver<MobileElement> driver)
@@ -134,7 +148,8 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 		int xCoOrdinate = (int) (size.width * 0.5);
 		int endY = (int) (size.height * 0.78);
 		int startY = (int) (size.height * 0.30);
-		new TouchAction(driver).press(PointOption.point(xCoOrdinate, startY)).waitAction().moveTo(PointOption.point(xCoOrdinate, endY)).release().perform();
+		new TouchAction(driver).press(PointOption.point(xCoOrdinate, startY)).waitAction()
+				.moveTo(PointOption.point(xCoOrdinate, endY)).release().perform();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -147,21 +162,18 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 		wait.until(ExpectedConditions.textToBePresentInElement(searchResultStateName, searchString.split(",")[1]));
 		driver.findElement(searchResultStateName).click();
 		try {
-			//Thread.sleep(20000);
+			// Thread.sleep(20000);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(srpMapBtn));
 			System.out.println("Map button lacated");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(searchingDialouge));
-		try
-		{
+		try {
 			wait.until(ExpectedConditions.invisibilityOfElementLocated(srpMessage));
 			System.out.println("Filter message located");
 
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println("Filter message not located");
 			driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
 		}
@@ -213,8 +225,7 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 
 	public void deleteAllSAvedSearch(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
-		wait = new WebDriverWait(driver, 20);
-		//relaunchApp(driver);
+		// relaunchApp(driver);
 		wait.until(ExpectedConditions.presenceOfElementLocated(clickDiscoverTab));
 		driver.findElement(clickDiscoverTab).click();
 		System.out.println("Discover Tab clicked");
@@ -222,6 +233,8 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 			scrollToText("Saved Searches", driver);
 			while (driver.findElement(savedSearchStar).isEnabled()) {
 				driver.findElement(savedSearchStar).click();
+				driver.findElement(scheduleTourButton).click();
+
 			}
 		} catch (Exception e) {
 			System.out.println("All saved search deleted..!");
@@ -229,7 +242,7 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 	}
 
 	public void saveSearch(AppiumDriver<MobileElement> driver) throws InterruptedException {
-		//Thread.sleep(4000);
+		// Thread.sleep(4000);
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(mapViewSRPClick));
 		driver.findElement(mapViewSRPClick).click();
@@ -246,18 +259,15 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 	public void fromClusterToPinView(AppiumDriver<MobileElement> driver) throws InterruptedException {
 
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        dt.navigateSearchTab(driver);		
-		
+		dt.navigateSearchTab(driver);
 
-		//wait.until(ExpectedConditions.visibilityOfElementLocated(clusterToPIN));
-		//driver.findElement(By.xpath("//android.view.View[@content-desc='Google Map']/android.view.View[2]")).click();
-		try
-		{
+		// wait.until(ExpectedConditions.visibilityOfElementLocated(clusterToPIN));
+		// driver.findElement(By.xpath("//android.view.View[@content-desc='Google
+		// Map']/android.view.View[2]")).click();
+		try {
 			driver.findElement(By.xpath("//*[@index='0']")).click();
 
-		}
-		catch(NoSuchElementException e)
-		{
+		} catch (NoSuchElementException e) {
 			driver.findElement(By.xpath("//*[@index='0']")).click();
 			e.printStackTrace();
 
@@ -290,7 +300,7 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 		driver.findElement(clickSearchBar).click();
 		// scrollToText("Saved Searches", driver);
 		Thread.sleep(3000);
-		driver.hideKeyboard();
+		isKeyboardPresent(driver);
 		driver.findElement(threeDottedMenuDiscoverTab).click();
 		Thread.sleep(3000);
 		wait = new WebDriverWait(driver, 20);
@@ -305,9 +315,9 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 	public void selectfilterBedBath(AppiumDriver<MobileElement> driver)
 			throws MalformedURLException, InterruptedException {
 		scrollToText("Baths", driver);
-        driver.findElement(fiveBedFilter).click();
-        driver.findElement(fiveBathFilter).click();
-        Thread.sleep(2000);
+		driver.findElement(fourBedFilter).click();
+		driver.findElement(fourBathFilter).click();
+		Thread.sleep(2000);
 		driver.findElement(applyFilterButton).click();
 		wait = new WebDriverWait(driver, 20);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(searchingDialouge));
@@ -322,56 +332,77 @@ public class commonFunctions extends desiredCapabilities implements CommonFuncti
 		wait.until(ExpectedConditions.textToBePresentInElement(searchResultName, "WMM"));
 		driver.findElement(searchResultName).click();
 	}
-	
+
 	public boolean isElementPresent(By locatorKey) {
-	    try {
-	       driver.findElement(locatorKey);
-	       Assert.assertTrue(driver.findElement(locatorKey).isDisplayed(), "Element is not present");
-	        return true;
-	    } 
-	    catch (Exception e) {
-	    	    e.printStackTrace();
-	        return false;
-	        
-	    }
+		try {
+			driver.findElement(locatorKey);
+			Assert.assertTrue(driver.findElement(locatorKey).isDisplayed(), "Element is not present");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+
+		}
 	}
-	
 
-public void ElementClickUsingJavaScript(By locatorKey)
-{
+	public void ElementClickUsingJavaScript(By locatorKey) {
 
-	 
-	 WebElement element = driver.findElement(locatorKey);
-	 JavascriptExecutor executor = (JavascriptExecutor)driver;
-	 executor.executeScript("arguments[0].click();", element);
-}
+		WebElement element = driver.findElement(locatorKey);
+		JavascriptExecutor executor = (JavascriptExecutor) driver;
+		executor.executeScript("arguments[0].click();", element);
+	}
 
-public void SearchPropertyDirectly(String searchString, AppiumDriver<MobileElement> driver)
-{
-	wait = new WebDriverWait(driver, 20);
-	wait.until(ExpectedConditions.elementToBeClickable(navigatingSearchTab));
-	driver.findElement(navigatingSearchTab).click();
-	driver.findElement(clickSearchBar).click();
-	driver.findElement(typeInsearchBar).sendKeys(searchString);
-	wait.until(ExpectedConditions.textToBePresentInElement(searchResultName, searchString));
-	driver.findElement(searchResultName).click();
-	wait.until(ExpectedConditions.invisibilityOfElementLocated(searchingDialouge));
-}
+	public void SearchPropertyDirectly(String searchString, AppiumDriver<MobileElement> driver) {
+		wait = new WebDriverWait(driver, 20);
+		wait.until(ExpectedConditions.elementToBeClickable(navigatingSearchTab));
+		driver.findElement(navigatingSearchTab).click();
+		driver.findElement(clickSearchBar).click();
+		driver.findElement(typeInsearchBar).sendKeys(searchString);
+		wait.until(ExpectedConditions.textToBePresentInElement(searchResultName, searchString));
+		driver.findElement(searchResultName).click();
+		try {
+			// Thread.sleep(20000);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(srpMapBtn));
+			System.out.println("Map button lacated");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(searchingDialouge));
+	}
 
-public boolean DateFormatValidation(String value) {
-	
-	try {
-        new SimpleDateFormat("dd mmm,yyyy").parse(value);
-        System.out.println("Date format is matched");
-        return true;
-    } catch (ParseException e) {
-        System.out.println("Date format is not matched");
-         return false;
-    }
-}
+	public boolean DateFormatValidation(String value) {
 
+		try {
+			new SimpleDateFormat("dd mmm,yyyy").parse(value);
+			System.out.println("Date format is matched");
+			return true;
+		} catch (ParseException e) {
+			System.out.println("Date format is not matched");
+			return false;
+		}
+	}
 
-	
-	 
+	public void ClearAllFilters() {
+		driver.findElement(clearFiltersButton).click();
+	}
+
+	public void verifyingSortingDialogue() {
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(sortingDialogueMessage));
+	}
+
+	public int convertingPriceStringtoIntValue(String priceFromApp) {
+		int propertyPriceInValue;
+		priceFromApp = priceFromApp.replaceAll(",", "");
+		priceFromApp = priceFromApp.replace("$", "");
+		propertyPriceInValue = Integer.parseInt(priceFromApp);
+		return propertyPriceInValue;
+	}
+
+	public void isKeyboardPresent(AppiumDriver<MobileElement> driver) {
+		try {
+			driver.hideKeyboard();
+		} catch (Exception e) {
+		}
+	}
 
 }

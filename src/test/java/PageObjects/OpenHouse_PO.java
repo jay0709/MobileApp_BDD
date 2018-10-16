@@ -16,49 +16,42 @@ import ObjectRepository.Registration_OR;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 
+public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR, Registration_OR, CommonFunctions_OR {
 
-public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Registration_OR,CommonFunctions_OR {
-	
 	AppiumDriver<MobileElement> driver;
 	WebElement element;
 	WebDriverWait wait;
 	commonFunctions cf = new commonFunctions();
 	PropertyData pr = new PropertyData();
 
-
-    public void turnOnOpenHouseFilter(AppiumDriver<MobileElement> driver)
+	public void turnOnOpenHouseFilter(AppiumDriver<MobileElement> driver)
 			throws InterruptedException, MalformedURLException {
 		driver.findElement(filtersTab).click();
 		Thread.sleep(2000);
 		driver.findElement(filtersClearAll).click();
 		cf.scrollToText("Days on Owners.com", driver);
-		//cf.scrollToText("Any", driver);
-		//cf.verticalScrollDownwrds(driver);
 		cf.verticalScrollUpwards(driver);
-		//Thread.sleep(5000);
-		//System.out.println(driver.findElement(openHouseToggle).getText());
 		if (driver.findElement(openHouseToggle).getText().equals("OFF")) {
-			try
-			{
-			driver.findElement(openHouseToggle).click();
-			Thread.sleep(3000);
-			Assert.assertEquals(driver.findElement(openHouseToggle).getText(), "ON","Open house toggle is turned on..!");
-			}
-			catch(Exception e)
-			{
+			try {
 				driver.findElement(openHouseToggle).click();
 				Thread.sleep(3000);
-				Assert.assertEquals(driver.findElement(openHouseToggle).getText(), "ON","Open house toggle is turned on..!");
+				Assert.assertEquals(driver.findElement(openHouseToggle).getText(), "ON",
+						"Open house toggle is turned on..!");
+			} catch (Exception e) {
+				driver.findElement(openHouseToggle).click();
+				Thread.sleep(3000);
+				Assert.assertEquals(driver.findElement(openHouseToggle).getText(), "ON",
+						"Open house toggle is turned on..!");
 			}
 		} else
 			System.out.println("Open house filter already turned on..");
-		    driver.findElement(applyFilterButton).click();
+		driver.findElement(applyFilterButton).click();
 	}
-    
-    public void openHouseDateVerify(AppiumDriver<MobileElement> driver)
+
+	public void openHouseDateVerify(AppiumDriver<MobileElement> driver)
 			throws InterruptedException, MalformedURLException {
-    	    Thread.sleep(4000);
-    	    driver.findElement(srpListBtn).click();
+		Thread.sleep(4000);
+		driver.findElement(srpListBtn).click();
 		cf.verticalScrollUpwards(driver);
 		Thread.sleep(2000);
 		String srpDate = driver.findElement(openTimeInSRP).getText().toLowerCase();
@@ -121,8 +114,9 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 			System.out.println(driver.findElement(savedOpenHouse).getText().toUpperCase());
 		} catch (Exception e) {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(saveOpenHouseIcon));
-			Assert.assertEquals(driver.findElement(savedOpenHouse).getText(), "Saved to your Open Houses Schedule.","Open house not saved");
-			//System.out.println(driver.findElement(savedOpenHouse).getText().toUpperCase());
+			Assert.assertEquals(driver.findElement(savedOpenHouse).getText(), "Saved to your Open Houses Schedule.",
+					"Open house not saved");
+			// System.out.println(driver.findElement(savedOpenHouse).getText().toUpperCase());
 		}
 	}
 
@@ -162,9 +156,7 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 
 		cf.scrollToText("Any", driver);
 		driver.findElement(DOM).click();
-		Thread.sleep(2000);
 		driver.findElement(lessSevenDaysDOM).click();
-		Thread.sleep(2000);
 		driver.findElement(applyFilterButton).click();
 	}
 
@@ -186,11 +178,11 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 		}
 		cf.clearAllFilters(driver);
 
-   }
-	
+	}
+
 	public void menuAddressVerify(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		wait = new WebDriverWait(driver, 10);
-		
+
 		// Getting the address of the open house
 		String time = driver.findElement(myOpenHouseTime).getText();
 		System.out.println("Open house time is: " + time);
@@ -203,23 +195,24 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 		Assert.assertEquals(addressMyOpenHouse, driver.findElement(menuAddress).getText(),
 				"Open house addess Mismatch..!");
 		System.out.println("Open house address verified as: " + addressMyOpenHouse);
-	}	
-	
+	}
+
 	public void viewPDPFromOpenHouse(AppiumDriver<MobileElement> driver)
 			throws InterruptedException, MalformedURLException {
 
-        // Navigation to PDP
+		// Navigation to PDP
 		driver.findElement(menuPropertydetails).click();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-		//wait.until(ExpectedConditions.visibilityOfElementLocated(openHouseHeaderTime));
+		// wait.until(ExpectedConditions.visibilityOfElementLocated(openHouseHeaderTime));
 		if (driver.findElement(favIconInPDP).isSelected()) {
 			driver.findElement(favIconInPDP).click();
 		}
 		System.out.println("User is navigated to PDP from Open house..");
 	}
+
 	public void scheduleTourOpenHouse(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		wait = new WebDriverWait(driver, 10);
-		//clickMenuInOpenHouse(driver);
+		// clickMenuInOpenHouse(driver);
 
 		// navigation to Request A Tour section
 		driver.findElement(menuRequestTour).click();
@@ -229,12 +222,12 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 		System.out.println("User is naviagted to Request a Tour section..!");
 		driver.navigate().back();
 	}
-	
+
 	public void clickMenuInOpenHouse(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(myOpenHouseMenu));
 		driver.findElement(myOpenHouseMenu).click();
 	}
-	
+
 	public void getDirectionsFromOpenHosuse(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		wait = new WebDriverWait(driver, 15);
 		clickMenuInOpenHouse(driver);
@@ -245,14 +238,14 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 		System.out.println("User is navigated to Maps..!");
 		driver.navigate().back();
 	}
-	
+
 	public void navigateToCreateEvent(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		String addressMyOpenHouse = driver.findElement(addressLineOne).getText() + ", "
 				+ driver.findElement(addressLineTwo).getText();
 		System.out.println(addressMyOpenHouse);
-		//driver.findElement(myOpenHouseMenu).click();
+		// driver.findElement(myOpenHouseMenu).click();
 		clickMenuInOpenHouse(driver);
-        driver.findElement(menuAddCalenderEvent).click();
+		driver.findElement(menuAddCalenderEvent).click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(calenderNaviagtion));
 		Assert.assertEquals(driver.findElement(calenderNaviagtion).getText(), "Open House",
 				"User is not navigated to Calendar");
@@ -261,9 +254,8 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 		driver.navigate().back();
 		driver.navigate().back();
 
-		
 	}
-	
+
 	public void deleteOpenHouse(AppiumDriver<MobileElement> driver) throws InterruptedException {
 		wait = new WebDriverWait(driver, 10);
 		clickMenuInOpenHouse(driver);
@@ -280,6 +272,5 @@ public class OpenHouse_PO extends desiredCapabilities implements OpenHouse_OR,Re
 				"All open house not cleared");
 		System.out.println("No saved open house available..!");
 	}
-	
-}
 
+}

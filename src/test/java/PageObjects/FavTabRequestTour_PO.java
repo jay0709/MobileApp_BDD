@@ -2,12 +2,10 @@ package PageObjects;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
 import Driver.PropertyData;
 import ObjectRepository.FavouriteProperty_OR;
 import ObjectRepository.PropertDetailsPage_OR;
