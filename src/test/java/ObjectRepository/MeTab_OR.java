@@ -34,8 +34,7 @@ public interface MeTab_OR {
 	public By UpdatedLocation = By.id("com.owners.buyer:id/account_header_user_location");
 	public By PastTourMessage = By.xpath("//*[@text='No Requested Tours']");
 	public By SavedOpenHousesMessage = By.xpath("//*[@text='No Saved Open Houses']");
-
-
-
+	public By NotificationInstant = By.id("com.owners.buyer:id/notification_search_selection_instant");
+    public By NotificationFilter = By.id("com.owners.buyer:id/notification_search_subtitle");
 
 }
